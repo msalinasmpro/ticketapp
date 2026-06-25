@@ -3,7 +3,7 @@ import CredentialsProvider from 'next-auth/providers/credentials'
 import GoogleProvider from 'next-auth/providers/google'
 import AzureADProvider from 'next-auth/providers/azure-ad'
 import { compare } from 'bcryptjs'
-import { prisma } from './prisma'
+import { findUserByEmail, findUserById, createUser } from './db'
 
 export const authOptions: NextAuthOptions = {
   session: { strategy: 'jwt' },
@@ -25,29 +25,15 @@ export const authOptions: NextAuthOptions = {
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
-          return null
-        }
+        if (!credentials?.email || !credentials?.password) return null
 
-        try {
-          const user = await prisma.user.findUnique({
-            where: { email: credentials.email },
-          })
+        const user = await findUserByEmail(credentials.email)
+        if (!user) return null
 
-          if (!user) {
-            return null
-          }
+        const isValid = await compare(credentials.password, user.password)
+        if (!isValid) return null
 
-          const isValid = await compare(credentials.password, user.password)
-          if (!isValid) {
-            return null
-          }
-
-          return { id: user.id, email: user.email, name: user.name, role: user.role }
-        } catch (error) {
-          console.error('[AUTH_ERR]', (error as Error).name, (error as Error).message)
-          return null
-        }
+        return { id: user.id, email: user.email, name: user.name, role: user.role }
       },
     }),
   ],
@@ -57,16 +43,14 @@ export const authOptions: NextAuthOptions = {
         const email = user.email
         if (!email) return false
 
-        const existingUser = await prisma.user.findUnique({ where: { email } })
+        const existingUser = await findUserByEmail(email)
 
         if (!existingUser) {
-          const newUser = await prisma.user.create({
-            data: {
-              email,
-              name: user.name || email.split('@')[0],
-              password: '',
-              role: 'user',
-            },
+          const newUser = await createUser({
+            email,
+            name: user.name || email.split('@')[0],
+            password: '',
+            role: 'user',
           })
           user.id = newUser.id
           ;(user as unknown as { role: string }).role = 'user'

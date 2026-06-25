@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { hash } from 'bcryptjs'
-import { prisma } from '@/lib/prisma'
+import { findUserByEmail, createUser } from '@/lib/db'
 import { registerSchema } from '@/lib/validations'
 
 export async function POST(req: Request) {
@@ -8,13 +8,15 @@ export async function POST(req: Request) {
     const body = await req.json()
     const { name, email, password } = registerSchema.parse(body)
 
-    const exists = await prisma.user.findUnique({ where: { email } })
+    const exists = await findUserByEmail(email)
     if (exists) {
       return NextResponse.json({ error: 'Email ya registrado' }, { status: 400 })
     }
 
-    const user = await prisma.user.create({
-      data: { name, email, password: await hash(password, 12) },
+    const user = await createUser({
+      name,
+      email,
+      password: await hash(password, 12),
     })
 
     return NextResponse.json({ user: { id: user.id, email: user.email, name: user.name } })
