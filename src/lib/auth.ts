@@ -26,7 +26,6 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
-          console.error('[AUTH] No credentials provided')
           return null
         }
 
@@ -36,19 +35,17 @@ export const authOptions: NextAuthOptions = {
           })
 
           if (!user) {
-            console.error('[AUTH] User not found:', credentials.email)
             return null
           }
 
           const isValid = await compare(credentials.password, user.password)
           if (!isValid) {
-            console.error('[AUTH] Invalid password for:', credentials.email)
             return null
           }
 
           return { id: user.id, email: user.email, name: user.name, role: user.role }
         } catch (error) {
-          console.error('[AUTH] Error during authorization:', error)
+          console.error('[AUTH_ERR]', (error as Error).name, (error as Error).message)
           return null
         }
       },
