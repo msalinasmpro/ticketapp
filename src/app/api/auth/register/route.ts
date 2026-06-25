@@ -3,6 +3,8 @@ import { hash } from 'bcryptjs'
 import { findUserByEmail, createUser } from '@/lib/db'
 import { registerSchema } from '@/lib/validations'
 
+export const runtime = 'nodejs'
+
 export async function POST(req: Request) {
   try {
     const body = await req.json()
