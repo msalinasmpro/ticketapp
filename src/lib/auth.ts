@@ -25,29 +25,18 @@ export const authOptions: NextAuthOptions = {
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
-          console.error('[AUTH] Missing credentials')
-          throw new Error('MISSING_CREDENTIALS')
+        if (!credentials?.email || !credentials?.password) return null
+
+        try {
+          const user = await findUserByEmail(credentials.email)
+          if (!user) return null
+          const isValid = await compare(credentials.password, user.password)
+          if (!isValid) return null
+          return { id: user.id, email: user.email, name: user.name, role: user.role }
+        } catch (e) {
+          console.log('[AUTH_ERR] ' + (e as Error).message)
+          return null
         }
-
-        console.log('[AUTH] Attempting login for:', credentials.email)
-        const user = await findUserByEmail(credentials.email)
-
-        if (!user) {
-          console.error('[AUTH] User not found:', credentials.email)
-          throw new Error('USER_NOT_FOUND')
-        }
-
-        console.log('[AUTH] User found:', user.email, user.role)
-        const isValid = await compare(credentials.password, user.password)
-
-        if (!isValid) {
-          console.error('[AUTH] Invalid password for:', credentials.email)
-          throw new Error('INVALID_PASSWORD')
-        }
-
-        console.log('[AUTH] Login success:', user.email)
-        return { id: user.id, email: user.email, name: user.name, role: user.role }
       },
     }),
   ],
