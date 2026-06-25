@@ -3,7 +3,7 @@ import CredentialsProvider from 'next-auth/providers/credentials'
 import GoogleProvider from 'next-auth/providers/google'
 import AzureADProvider from 'next-auth/providers/azure-ad'
 import { compare } from 'bcryptjs'
-import { findUserByEmail, findUserById, createUser } from './db'
+import { findUserByEmail, createUser } from './db'
 
 export const authOptions: NextAuthOptions = {
   session: { strategy: 'jwt' },
@@ -25,14 +25,28 @@ export const authOptions: NextAuthOptions = {
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) return null
+        if (!credentials?.email || !credentials?.password) {
+          console.error('[AUTH] Missing credentials')
+          throw new Error('MISSING_CREDENTIALS')
+        }
 
+        console.log('[AUTH] Attempting login for:', credentials.email)
         const user = await findUserByEmail(credentials.email)
-        if (!user) return null
 
+        if (!user) {
+          console.error('[AUTH] User not found:', credentials.email)
+          throw new Error('USER_NOT_FOUND')
+        }
+
+        console.log('[AUTH] User found:', user.email, user.role)
         const isValid = await compare(credentials.password, user.password)
-        if (!isValid) return null
 
+        if (!isValid) {
+          console.error('[AUTH] Invalid password for:', credentials.email)
+          throw new Error('INVALID_PASSWORD')
+        }
+
+        console.log('[AUTH] Login success:', user.email)
         return { id: user.id, email: user.email, name: user.name, role: user.role }
       },
     }),
@@ -42,9 +56,7 @@ export const authOptions: NextAuthOptions = {
       if (account?.provider === 'google' || account?.provider === 'azure-ad') {
         const email = user.email
         if (!email) return false
-
         const existingUser = await findUserByEmail(email)
-
         if (!existingUser) {
           const newUser = await createUser({
             email,

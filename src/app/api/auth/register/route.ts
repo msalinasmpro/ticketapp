@@ -20,7 +20,8 @@ export async function POST(req: Request) {
     })
 
     return NextResponse.json({ user: { id: user.id, email: user.email, name: user.name } })
-  } catch {
-    return NextResponse.json({ error: 'Datos inválidos' }, { status: 400 })
+  } catch (error) {
+    console.error('[REGISTER]', (error as Error).message)
+    return NextResponse.json({ error: 'Datos inválidos: ' + (error as Error).message }, { status: 400 })
   }
 }
