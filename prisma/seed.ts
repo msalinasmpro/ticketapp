@@ -1,26 +1,31 @@
 import { PrismaClient } from '@prisma/client'
 import { PrismaPg } from '@prisma/adapter-pg'
+import { Pool } from 'pg'
 import { hash } from 'bcryptjs'
 
-const adapter = new PrismaPg(process.env.DATABASE_URL!)
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false },
+})
+const adapter = new PrismaPg(pool)
 const prisma = new PrismaClient({ adapter })
 
 async function main() {
-  const admin = await prisma.user.upsert({
-    where: { email: 'admin@ticketapp.com' },
-    update: {},
-    create: {
-      email: 'admin@ticketapp.com',
-      name: 'Admin',
-      password: await hash('admin123', 12),
+  await prisma.ticket.deleteMany()
+  await prisma.notification.deleteMany()
+  await prisma.user.deleteMany()
+
+  const admin = await prisma.user.create({
+    data: {
+      email: 'msalinas@tecnodior.cll',
+      name: 'Matías Salinas',
+      password: await hash('$$Stadmin.26', 12),
       role: 'admin',
     },
   })
 
-  const user = await prisma.user.upsert({
-    where: { email: 'user@ticketapp.com' },
-    update: {},
-    create: {
+  const user = await prisma.user.create({
+    data: {
       email: 'user@ticketapp.com',
       name: 'Usuario Test',
       password: await hash('user123', 12),
@@ -66,4 +71,5 @@ main()
   })
   .finally(async () => {
     await prisma.$disconnect()
+    await pool.end()
   })
