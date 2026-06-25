@@ -16,10 +16,9 @@ export default async function TicketsPage({
   const status = params.status
   const priority = params.priority
 
-  const where = {
-    ...(status ? { status } : {}),
-    ...(priority ? { priority } : {}),
-  }
+  const where: { status?: string; priority?: string } = {}
+  if (status) where.status = status
+  if (priority) where.priority = priority
 
   const tickets = await prisma.ticket.findMany({
     where: Object.keys(where).length > 0 ? where : undefined,
