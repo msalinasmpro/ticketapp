@@ -2,7 +2,7 @@ import { Pool, QueryResult, QueryResultRow } from 'pg'
 
 let _pool: Pool | null = null
 
-function getPool(): Pool {
+export function getPool(): Pool {
   if (_pool) return _pool
   const url = process.env.DATABASE_URL
   if (!url) throw new Error('DATABASE_URL not set')
@@ -27,8 +27,8 @@ export interface DbUser {
 }
 
 export async function dbQuery<T extends QueryResultRow = Record<string, unknown>>(text: string, params?: unknown[]): Promise<QueryResult<T>> {
-  const pool = getPool()
-  return pool.query<T>(text, params)
+  const p = getPool()
+  return p.query<T>(text, params)
 }
 
 export async function findUserByEmail(email: string): Promise<DbUser | null> {
