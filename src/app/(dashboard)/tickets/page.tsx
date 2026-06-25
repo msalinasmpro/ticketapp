@@ -2,8 +2,12 @@ import { redirect } from 'next/navigation'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-import { Prisma } from '@prisma/client'
 import Link from 'next/link'
+
+type TicketWhere = {
+  status?: string
+  priority?: string
+}
 
 export default async function TicketsPage({
   searchParams,
@@ -17,7 +21,7 @@ export default async function TicketsPage({
   const status = params.status
   const priority = params.priority
 
-  const where: Prisma.TicketWhereInput = {}
+  const where: TicketWhere = {}
   if (status) where.status = status
   if (priority) where.priority = priority
 
