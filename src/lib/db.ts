@@ -4,7 +4,7 @@ let _pool: Pool | null = null
 
 function getPool(): Pool {
   if (_pool) return _pool
-  const url = process.env.DATABASE_URL
+  const url = process.env.DATABASE_URL || (process.env.DATABASE_URL_B64 ? Buffer.from(process.env.DATABASE_URL_B64, 'base64').toString() : null)
   if (!url) throw new Error('DATABASE_URL not set')
   _pool = new Pool({
     connectionString: url,
