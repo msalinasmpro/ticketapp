@@ -1,0 +1,58 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-background: #FAFAFA;
+  --color-foreground: #0D0D0D;
+  --color-muted: #5a5a5a;
+  --color-light: #9a9a9a;
+  --color-accent: #CC2B2B;
+  --color-accent-hover: #A82222;
+  --color-border: #E8E8E8;
+  --color-surface: #FFFFFF;
+  --color-surface-hover: #F5F5F5;
+  --color-blue: #2563EB;
+  --color-blue-light: #EFF6FF;
+  --color-yellow: #D97706;
+  --color-yellow-light: #FFFBEB;
+  --color-green: #059669;
+  --color-green-light: #ECFDF5;
+  --color-gray-badge: #6B7280;
+  --color-gray-light: #F3F4F6;
+  --color-orange: #EA580C;
+  --color-orange-light: #FFF7ED;
+  --color-red: #DC2626;
+  --color-red-light: #FEF2F2;
+  --font-sans: 'Poppins', 'Helvetica Neue', Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 300;
+  letter-spacing: -0.01em;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+input, textarea, select, button {
+  font-family: var(--font-sans);
+}
+
+::selection {
+  background: rgba(204, 43, 43, 0.15);
+  color: #0D0D0D;
+}
