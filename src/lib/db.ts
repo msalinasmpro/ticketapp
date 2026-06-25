@@ -4,10 +4,12 @@ let _pool: Pool | null = null
 
 function getPool(): Pool {
   if (_pool) return _pool
-  const url = process.env.DATABASE_URL || (process.env.DATABASE_URL_B64 ? Buffer.from(process.env.DATABASE_URL_B64, 'base64').toString() : null)
-  if (!url) throw new Error('DATABASE_URL not set')
   _pool = new Pool({
-    connectionString: url,
+    host: 'db.jogaegabfafghmphzdvb.supabase.co',
+    port: 6543,
+    database: 'postgres',
+    user: 'postgres',
+    password: '$$Stadmin.2026',
     ssl: { rejectUnauthorized: false },
     max: 3,
     idleTimeoutMillis: 10000,
