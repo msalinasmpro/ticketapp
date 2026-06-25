@@ -4,11 +4,6 @@ import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import Link from 'next/link'
 
-type TicketWhere = {
-  status?: string
-  priority?: string
-}
-
 export default async function TicketsPage({
   searchParams,
 }: {
@@ -21,12 +16,13 @@ export default async function TicketsPage({
   const status = params.status
   const priority = params.priority
 
-  const where: TicketWhere = {}
-  if (status) where.status = status
-  if (priority) where.priority = priority
+  const where = {
+    ...(status ? { status } : {}),
+    ...(priority ? { priority } : {}),
+  }
 
   const tickets = await prisma.ticket.findMany({
-    where,
+    where: Object.keys(where).length > 0 ? where : undefined,
     include: {
       creator: { select: { id: true, name: true, email: true } },
       assignee: { select: { id: true, name: true, email: true } },
