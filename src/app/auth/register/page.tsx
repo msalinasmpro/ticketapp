@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { useTheme } from '@/components/providers/theme-provider'
 
 function Toast({ message, type, onClose }: { message: string; type: 'success' | 'error'; onClose: () => void }) {
   useEffect(() => {
@@ -26,6 +27,7 @@ function Toast({ message, type, onClose }: { message: string; type: 'success' | 
 
 export default function RegisterPage() {
   const router = useRouter()
+  const { theme, toggle } = useTheme()
   const [error, setError] = useState('')
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null)
   const [loading, setLoading] = useState(false)
@@ -70,6 +72,13 @@ export default function RegisterPage() {
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <style>{`@keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }`}</style>
       {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
+      <button onClick={toggle} className="fixed top-5 right-5 h-9 w-9 rounded-md flex items-center justify-center text-muted hover:text-foreground hover:bg-surface-hover border border-border transition-all duration-200 z-10" title={theme === 'dark' ? 'Modo claro' : 'Modo oscuro'}>
+        {theme === 'dark' ? (
+          <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="5" /><line x1="12" y1="1" x2="12" y2="3" /><line x1="12" y1="21" x2="12" y2="23" /><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" /><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" /><line x1="1" y1="12" x2="3" y2="12" /><line x1="21" y1="12" x2="23" y2="12" /><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" /><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" /></svg>
+        ) : (
+          <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" /></svg>
+        )}
+      </button>
       <div className="w-full max-w-[400px]">
         <div className="mb-8 text-center">
           <div className="mx-auto mb-4 h-12 w-12 rounded-xl bg-accent flex items-center justify-center">
