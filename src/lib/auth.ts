@@ -1,7 +1,5 @@
 import { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
-import GoogleProvider from 'next-auth/providers/google'
-import AzureADProvider from 'next-auth/providers/azure-ad'
 import { compare } from 'bcryptjs'
 import { findUserByEmail, createUser } from './db'
 
@@ -9,15 +7,6 @@ export const authOptions: NextAuthOptions = {
   session: { strategy: 'jwt' },
   pages: { signIn: '/auth/login' },
   providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID || '',
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
-    }),
-    AzureADProvider({
-      clientId: process.env.AZURE_AD_CLIENT_ID || '',
-      clientSecret: process.env.AZURE_AD_CLIENT_SECRET || '',
-      tenantId: process.env.AZURE_AD_TENANT_ID || '',
-    }),
     CredentialsProvider({
       name: 'credentials',
       credentials: {
