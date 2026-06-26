@@ -107,7 +107,11 @@ export async function findTicketById(id: string): Promise<DbTicket | null> {
 }
 
 export async function updateTicket(id: string, data: Record<string, unknown>): Promise<DbTicket> {
-  const rows = await rest<DbTicket[]>(`/rest/v1/Ticket?select=id,title,description,status,priority,phone,company,attachmentUrl,creatorId,assigneeId,createdAt,updatedAt,creator:User!Ticket_creatorId_fkey(id,name,email),assignee:User!Ticket_assigneeId_fkey(id,name,email)&id=eq.${encodeURIComponent(id)}`, {
+  const updateData: Record<string, unknown> = { ...data, updatedAt: new Date().toISOString() }
+  if (updateData.assigneeId === '' || updateData.assigneeId === undefined) {
+    updateData.assigneeId = null
+  }
+  const rows = await rest<DbTicket[]>(`/rest/v1/Ticket?select=id,ticketNumber,title,description,status,priority,phone,company,clientName,reportTo,attachmentUrl,creatorId,assigneeId,createdAt,updatedAt,creator:User!Ticket_creatorId_fkey(id,name,email),assignee:User!Ticket_assigneeId_fkey(id,name,email)&id=eq.${encodeURIComponent(id)}`, {
     method: 'PATCH',
     headers: { ...headers, Prefer: 'return=representation' },
     body: JSON.stringify({ ...data, updatedAt: new Date().toISOString() }),

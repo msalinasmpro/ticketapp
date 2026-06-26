@@ -37,7 +37,11 @@ export async function POST(req: Request) {
     const body = await req.json()
     const data = ticketSchema.parse(body)
 
-    const ticket = await createTicket({ ...data, creatorId: session.user.id })
+    const ticketData: Record<string, unknown> = { ...data, creatorId: session.user.id }
+    if (session.user.role === 'admin' && !data.assigneeId) {
+      ticketData.assigneeId = session.user.id
+    }
+    const ticket = await createTicket(ticketData)
 
     const users = await findUsers()
     const admins = users.filter(u => u.role === 'admin')

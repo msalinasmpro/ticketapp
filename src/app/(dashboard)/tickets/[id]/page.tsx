@@ -2,6 +2,7 @@
 
 import { use, useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { TicketForm } from '@/components/tickets/ticket-form'
 
@@ -40,9 +41,12 @@ const priorityLabels: Record<string, string> = {
 export default function TicketDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params)
   const router = useRouter()
+  const { data: session } = useSession()
   const [ticket, setTicket] = useState<Ticket | null>(null)
+  const [admins, setAdmins] = useState<{ id: string; name: string; email: string }[]>([])
   const [loading, setLoading] = useState(true)
   const [editing, setEditing] = useState(false)
+  const isAdmin = session?.user?.role === 'admin'
 
   useEffect(() => {
     fetch(`/api/tickets/${id}`)
@@ -51,7 +55,12 @@ export default function TicketDetailPage({ params }: { params: Promise<{ id: str
         setTicket(data)
         setLoading(false)
       })
-  }, [id])
+    if (isAdmin) {
+      fetch('/api/users')
+        .then((res) => res.json())
+        .then((data) => setAdmins(data.filter((u: { role: string }) => u.role === 'admin')))
+    }
+  }, [id, isAdmin])
 
   async function handleUpdate(data: Record<string, unknown>) {
     const res = await fetch(`/api/tickets/${id}`, {
@@ -126,6 +135,8 @@ export default function TicketDetailPage({ params }: { params: Promise<{ id: str
           <TicketForm
             initialData={ticket}
             onSubmit={handleUpdate}
+            showClientName={isAdmin}
+            assignees={admins}
           />
         </div>
       </div>

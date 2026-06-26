@@ -18,9 +18,10 @@ interface TicketFormProps {
   }
   onSubmit: (data: Record<string, string | undefined>) => Promise<void>
   showClientName?: boolean
+  assignees?: { id: string; name: string; email: string }[]
 }
 
-export function TicketForm({ initialData, onSubmit, showClientName }: TicketFormProps) {
+export function TicketForm({ initialData, onSubmit, showClientName, assignees = [] }: TicketFormProps) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -179,6 +180,25 @@ export function TicketForm({ initialData, onSubmit, showClientName }: TicketForm
               className="block w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-light focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-all duration-200"
             />
           </div>
+        </div>
+      )}
+
+      {showClientName && assignees.length > 0 && (
+        <div>
+          <label htmlFor="assigneeId" className="block text-sm font-medium text-foreground mb-1.5">
+            Asignar ticket a
+          </label>
+          <select
+            id="assigneeId"
+            name="assigneeId"
+            defaultValue={initialData?.assigneeId || ''}
+            className="block w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-all duration-200 appearance-none cursor-pointer"
+          >
+            <option value="">Sin asignar</option>
+            {assignees.map(a => (
+              <option key={a.id} value={a.id}>{a.name} ({a.email})</option>
+            ))}
+          </select>
         </div>
       )}
 

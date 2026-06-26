@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
@@ -9,6 +10,15 @@ export default function NewTicketPage() {
   const router = useRouter()
   const { data: session } = useSession()
   const isAdmin = session?.user?.role === 'admin'
+  const [admins, setAdmins] = useState<{ id: string; name: string; email: string }[]>([])
+
+  useEffect(() => {
+    if (isAdmin) {
+      fetch('/api/users')
+        .then((res) => res.json())
+        .then((data) => setAdmins(data.filter((u: { role: string }) => u.role === 'admin')))
+    }
+  }, [isAdmin])
 
   async function handleSubmit(data: Record<string, unknown>) {
     const res = await fetch('/api/tickets', {
@@ -40,7 +50,7 @@ export default function NewTicketPage() {
         </p>
       </div>
       <div className="rounded-xl bg-surface border border-border p-8 shadow-sm">
-        <TicketForm onSubmit={handleSubmit} showClientName={isAdmin} />
+        <TicketForm onSubmit={handleSubmit} showClientName={isAdmin} assignees={admins} />
       </div>
     </div>
   )
