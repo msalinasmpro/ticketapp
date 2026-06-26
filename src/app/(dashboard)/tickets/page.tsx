@@ -57,6 +57,10 @@ export default async function TicketsPage({
     <div>
       <div className="flex items-center justify-between mb-8">
         <div>
+          <Link href="/" className="inline-flex items-center gap-1.5 text-sm text-light hover:text-foreground transition-colors mb-3">
+            <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 19l-7-7 7-7" /></svg>
+            Dashboard
+          </Link>
           <h1 className="text-3xl font-semibold tracking-tight text-foreground">
             Tickets
           </h1>

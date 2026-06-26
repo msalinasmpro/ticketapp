@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 interface User {
   id: string
@@ -60,8 +61,12 @@ export default function AdminUsersPage() {
   if (!isAdmin) return null
 
   return (
-    <div>
+    <div className="mx-auto max-w-4xl">
       <div className="mb-8">
+        <Link href="/" className="inline-flex items-center gap-1.5 text-sm text-light hover:text-foreground transition-colors mb-3">
+          <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 19l-7-7 7-7" /></svg>
+          Volver al Dashboard
+        </Link>
         <h1 className="text-3xl font-semibold tracking-tight text-foreground">Gestionar Usuarios</h1>
         <p className="mt-1 text-sm text-light">Administra los roles de los usuarios registrados</p>
       </div>
