@@ -2,39 +2,42 @@
 
 @theme inline {
   --color-background: #000000;
-  --color-foreground: #ededed;
-  --color-muted: #8b8b8b;
-  --color-light: #666666;
-  --color-accent: #3ecf8e;
-  --color-accent-hover: #2db878;
-  --color-border: #2a2a2a;
-  --color-surface: #0a0a0a;
-  --color-surface-hover: #141414;
+  --color-foreground: #ffffff;
+  --color-muted: #aaa;
+  --color-light: #777777;
+  --color-accent: #ededed;
+  --color-accent-hover: #ffffff;
+  --color-border: #1e1e1e;
+  --color-surface: #0f0f0f;
+  --color-surface-hover: rgba(255,255,255,0.04);
   --color-blue: #3b82f6;
   --color-blue-light: rgba(59, 130, 246, 0.12);
   --color-yellow: #f59e0b;
   --color-yellow-light: rgba(245, 158, 11, 0.12);
   --color-green: #3ecf8e;
   --color-green-light: rgba(62, 207, 142, 0.12);
-  --color-gray-badge: #8b8b8b;
+  --color-gray-badge: #585858;
   --color-gray-light: #1a1a1a;
   --color-orange: #f97316;
   --color-orange-light: rgba(249, 115, 22, 0.12);
   --color-red: #ef4444;
   --color-red-light: rgba(239, 68, 68, 0.12);
+  --color-tertiary: #777777;
+  --color-muted-text: #585858;
+  --color-link: #0070f3;
   --font-sans: 'Inter', 'Helvetica Neue', Arial, sans-serif;
 }
 
 :root {
   --color-background: #000000;
-  --color-foreground: #ededed;
-  --color-muted: #8b8b8b;
-  --color-light: #666666;
-  --color-accent: #3ecf8e;
-  --color-accent-hover: #2db878;
-  --color-border: #2a2a2a;
-  --color-surface: #0a0a0a;
-  --color-surface-hover: #141414;
+  --color-foreground: #ffffff;
+  --color-muted: #aaa;
+  --color-light: #777777;
+  --color-accent: #ededed;
+  --color-accent-hover: #ffffff;
+  --color-border: #1e1e1e;
+  --color-surface: #0f0f0f;
+  --color-surface-hover: rgba(255,255,255,0.04);
 }
 
 .light {
@@ -47,6 +50,9 @@
   --color-border: #e5e5e5;
   --color-surface: #fafafa;
   --color-surface-hover: #f5f5f5;
+  --color-tertiary: #777777;
+  --color-muted-text: #585858;
+  --color-link: #0070f3;
   --color-blue-light: rgba(59, 130, 246, 0.08);
   --color-yellow-light: rgba(245, 158, 11, 0.08);
   --color-green-light: rgba(62, 207, 142, 0.08);
@@ -70,6 +76,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-weight: 400;
+  font-size: 13px;
   letter-spacing: -0.01em;
 }
 
