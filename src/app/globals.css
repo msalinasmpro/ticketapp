@@ -1,28 +1,58 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-background: #FAFAFA;
-  --color-foreground: #0D0D0D;
-  --color-muted: #5a5a5a;
-  --color-light: #9a9a9a;
-  --color-accent: #CC2B2B;
-  --color-accent-hover: #A82222;
-  --color-border: #E8E8E8;
-  --color-surface: #FFFFFF;
-  --color-surface-hover: #F5F5F5;
-  --color-blue: #2563EB;
-  --color-blue-light: #EFF6FF;
-  --color-yellow: #D97706;
-  --color-yellow-light: #FFFBEB;
-  --color-green: #059669;
-  --color-green-light: #ECFDF5;
-  --color-gray-badge: #6B7280;
-  --color-gray-light: #F3F4F6;
-  --color-orange: #EA580C;
-  --color-orange-light: #FFF7ED;
-  --color-red: #DC2626;
-  --color-red-light: #FEF2F2;
-  --font-sans: 'Poppins', 'Helvetica Neue', Arial, sans-serif;
+  --color-background: #000000;
+  --color-foreground: #ededed;
+  --color-muted: #8b8b8b;
+  --color-light: #666666;
+  --color-accent: #3ecf8e;
+  --color-accent-hover: #2db878;
+  --color-border: #2a2a2a;
+  --color-surface: #0a0a0a;
+  --color-surface-hover: #141414;
+  --color-blue: #3b82f6;
+  --color-blue-light: rgba(59, 130, 246, 0.12);
+  --color-yellow: #f59e0b;
+  --color-yellow-light: rgba(245, 158, 11, 0.12);
+  --color-green: #3ecf8e;
+  --color-green-light: rgba(62, 207, 142, 0.12);
+  --color-gray-badge: #8b8b8b;
+  --color-gray-light: #1a1a1a;
+  --color-orange: #f97316;
+  --color-orange-light: rgba(249, 115, 22, 0.12);
+  --color-red: #ef4444;
+  --color-red-light: rgba(239, 68, 68, 0.12);
+  --font-sans: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+}
+
+:root {
+  --color-background: #000000;
+  --color-foreground: #ededed;
+  --color-muted: #8b8b8b;
+  --color-light: #666666;
+  --color-accent: #3ecf8e;
+  --color-accent-hover: #2db878;
+  --color-border: #2a2a2a;
+  --color-surface: #0a0a0a;
+  --color-surface-hover: #141414;
+}
+
+.light {
+  --color-background: #ffffff;
+  --color-foreground: #1a1a1a;
+  --color-muted: #666666;
+  --color-light: #999999;
+  --color-accent: #3ecf8e;
+  --color-accent-hover: #2db878;
+  --color-border: #e5e5e5;
+  --color-surface: #fafafa;
+  --color-surface-hover: #f5f5f5;
+  --color-blue-light: rgba(59, 130, 246, 0.08);
+  --color-yellow-light: rgba(245, 158, 11, 0.08);
+  --color-green-light: rgba(62, 207, 142, 0.08);
+  --color-gray-light: #f5f5f5;
+  --color-orange-light: rgba(249, 115, 22, 0.08);
+  --color-red-light: rgba(239, 68, 68, 0.08);
 }
 
 * {
@@ -39,12 +69,12 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-weight: 300;
+  font-weight: 400;
   letter-spacing: -0.01em;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: -0.02em;
 }
 
@@ -53,6 +83,6 @@ input, textarea, select, button {
 }
 
 ::selection {
-  background: rgba(204, 43, 43, 0.15);
-  color: #0D0D0D;
+  background: rgba(62, 207, 142, 0.25);
+  color: var(--color-foreground);
 }

@@ -4,11 +4,13 @@ import { useSession, signOut } from 'next-auth/react'
 import Link from 'next/link'
 import { useState, useRef, useEffect } from 'react'
 import { NotificationBell } from '@/components/notifications/notification-bell'
+import { useTheme } from '@/components/providers/theme-provider'
 
 export function Navbar() {
   const { data: session } = useSession()
   const [menuOpen, setMenuOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
+  const { theme, toggle } = useTheme()
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -23,91 +25,93 @@ export function Navbar() {
   const isAdmin = session?.user?.role === 'admin'
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-border bg-surface/80 backdrop-blur-xl">
+    <nav className="sticky top-0 z-50 border-b border-border bg-[var(--color-background)]/80 backdrop-blur-xl">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
-          <div className="flex items-center gap-10">
-            <Link href="/" className="flex items-center gap-2.5">
-              <div className="h-8 w-8 rounded-lg bg-accent flex items-center justify-center">
-                <svg className="h-4 w-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <div className="flex h-14 items-center justify-between">
+          <div className="flex items-center gap-8">
+            <Link href="/" className="flex items-center gap-2">
+              <div className="h-7 w-7 rounded-md bg-accent flex items-center justify-center">
+                <svg className="h-3.5 w-3.5 text-black" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                 </svg>
               </div>
-              <span className="text-base font-semibold tracking-tight text-foreground">
+              <span className="text-sm font-semibold tracking-tight text-foreground">
                 TicketApp
               </span>
             </Link>
-            <div className="hidden sm:flex items-center gap-1">
-              <Link
-                href="/"
-                className="rounded-lg px-3.5 py-2 text-sm font-medium text-muted hover:text-foreground hover:bg-surface-hover transition-all duration-200"
-              >
+            <div className="hidden sm:flex items-center gap-0.5">
+              <Link href="/" className="rounded-md px-3 py-1.5 text-sm font-medium text-muted hover:text-foreground transition-colors duration-150">
                 Dashboard
               </Link>
-              <Link
-                href="/tickets"
-                className="rounded-lg px-3.5 py-2 text-sm font-medium text-muted hover:text-foreground hover:bg-surface-hover transition-all duration-200"
-              >
+              <Link href="/tickets" className="rounded-md px-3 py-1.5 text-sm font-medium text-muted hover:text-foreground transition-colors duration-150">
                 Tickets
               </Link>
               {isAdmin && (
-                <Link
-                  href="/admin/settings"
-                  className="rounded-lg px-3.5 py-2 text-sm font-medium text-muted hover:text-foreground hover:bg-surface-hover transition-all duration-200"
-                >
-                  Configuración
+                <Link href="/admin/settings" className="rounded-md px-3 py-1.5 text-sm font-medium text-muted hover:text-foreground transition-colors duration-150">
+                  Config
                 </Link>
               )}
             </div>
           </div>
 
           {session && (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1">
               <NotificationBell />
+
+              <button
+                onClick={toggle}
+                className="h-8 w-8 rounded-md flex items-center justify-center text-muted hover:text-foreground hover:bg-surface-hover transition-all duration-150"
+                title={theme === 'dark' ? 'Modo claro' : 'Modo oscuro'}
+              >
+                {theme === 'dark' ? (
+                  <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="5" />
+                    <line x1="12" y1="1" x2="12" y2="3" />
+                    <line x1="12" y1="21" x2="12" y2="23" />
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                    <line x1="1" y1="12" x2="3" y2="12" />
+                    <line x1="21" y1="12" x2="23" y2="12" />
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+                  </svg>
+                ) : (
+                  <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                  </svg>
+                )}
+              </button>
 
               <div className="relative" ref={menuRef}>
                 <button
                   onClick={() => setMenuOpen(!menuOpen)}
-                  className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium text-muted hover:bg-surface-hover transition-all duration-200"
+                  className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm text-muted hover:bg-surface-hover transition-all duration-150"
                 >
-                  <span className="h-8 w-8 rounded-full bg-gradient-to-br from-accent to-red-400 flex items-center justify-center text-white text-xs font-semibold shadow-sm">
+                  <span className="h-7 w-7 rounded-full bg-accent/20 text-accent flex items-center justify-center text-xs font-semibold">
                     {session.user?.name?.charAt(0).toUpperCase()}
                   </span>
-                  <span className="hidden sm:inline text-foreground">{session.user?.name}</span>
-                  <svg className={`h-4 w-4 text-light transition-transform duration-200 ${menuOpen ? 'rotate-180' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <span className="hidden sm:inline text-foreground text-sm">{session.user?.name}</span>
+                  <svg className={`h-3.5 w-3.5 text-light transition-transform duration-150 ${menuOpen ? 'rotate-180' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M6 9l6 6 6-6" />
                   </svg>
                 </button>
 
                 {menuOpen && (
-                  <div className="absolute right-0 mt-2 w-56 rounded-xl bg-surface border border-border py-1.5 shadow-lg shadow-black/5">
-                    <div className="px-4 py-2.5 border-b border-border">
+                  <div className="absolute right-0 mt-2 w-52 rounded-xl bg-surface border border-border py-1 shadow-xl shadow-black/30">
+                    <div className="px-3 py-2 border-b border-border">
                       <p className="text-sm font-medium text-foreground truncate">{session.user?.name}</p>
                       <p className="text-xs text-light truncate">{session.user?.email}</p>
                     </div>
-                    <div className="px-4 py-2 border-b border-border">
-                      <span className="inline-flex items-center rounded-full bg-accent/10 px-2.5 py-0.5 text-xs font-medium text-accent">
+                    <div className="px-3 py-1.5 border-b border-border">
+                      <span className="inline-flex items-center rounded-full bg-accent/10 px-2 py-0.5 text-xs font-medium text-accent">
                         {session.user?.role}
                       </span>
                     </div>
-                    {isAdmin && (
-                      <Link
-                        href="/admin/settings"
-                        onClick={() => setMenuOpen(false)}
-                        className="w-full text-left px-4 py-2.5 text-sm text-muted hover:text-foreground hover:bg-surface-hover flex items-center gap-2 transition-colors duration-150"
-                      >
-                        <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <circle cx="12" cy="12" r="3" />
-                          <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z" />
-                        </svg>
-                        Configuración
-                      </Link>
-                    )}
                     <button
                       onClick={() => signOut({ callbackUrl: '/auth/login' })}
-                      className="w-full text-left px-4 py-2.5 text-sm text-muted hover:text-red hover:bg-red-light flex items-center gap-2 transition-colors duration-150"
+                      className="w-full text-left px-3 py-2 text-sm text-muted hover:text-red hover:bg-red-light flex items-center gap-2 transition-colors duration-150"
                     >
-                      <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
                         <polyline points="16 17 21 12 16 7" />
                         <line x1="21" y1="12" x2="9" y2="12" />
