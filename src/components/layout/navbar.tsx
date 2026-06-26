@@ -75,6 +75,14 @@ export function Navbar() {
                       <div className="px-3 py-1.5 border-b border-border">
                         <span className="inline-flex items-center rounded-full bg-accent/10 px-2 py-0.5 text-xs font-medium text-accent">{session.user?.role}</span>
                       </div>
+                      <Link
+                        href="/account/change-password"
+                        onClick={() => setMenuOpen(false)}
+                        className="w-full text-left px-3 py-2 text-sm text-muted hover:text-foreground hover:bg-surface-hover flex items-center gap-2 transition-colors"
+                      >
+                        <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0110 0v4" /></svg>
+                        Cambiar Contraseña
+                      </Link>
                       <button onClick={() => signOut({ callbackUrl: '/auth/login' })} className="w-full text-left px-3 py-2 text-sm text-muted hover:text-red hover:bg-red-light flex items-center gap-2 transition-colors">
                         <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" y1="12" x2="9" y2="12" /></svg>
                         Cerrar Sesión

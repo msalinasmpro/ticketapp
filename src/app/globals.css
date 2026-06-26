@@ -86,3 +86,8 @@ input, textarea, select, button {
   background: rgba(62, 207, 142, 0.25);
   color: var(--color-foreground);
 }
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}

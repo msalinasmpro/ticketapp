@@ -22,7 +22,7 @@ export function DashboardActions() {
     <div className="relative" ref={ref}>
       <button
         onClick={() => setOpen(!open)}
-        className="inline-flex items-center justify-center rounded-xl border border-border bg-surface p-2.5 text-muted hover:bg-surface-hover hover:text-foreground transition-all duration-200"
+        className="inline-flex items-center justify-center rounded-md border border-border bg-surface p-2.5 text-muted hover:bg-surface-hover hover:text-foreground transition-all duration-200"
       >
         <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <circle cx="12" cy="12" r="3" />

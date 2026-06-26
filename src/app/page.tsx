@@ -95,7 +95,7 @@ export default async function DashboardPage({
         <div className="flex items-center gap-3">
           <Link
             href="/tickets/new"
-            className="inline-flex items-center gap-2 rounded-xl bg-accent px-5 py-2.5 text-sm font-medium text-white hover:bg-accent-hover transition-all duration-200 shadow-sm shadow-accent/20"
+            className="inline-flex items-center gap-2 rounded-md bg-accent px-5 py-2.5 text-sm font-medium text-white hover:bg-accent-hover transition-all duration-200 shadow-sm shadow-accent/20"
           >
             <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <line x1="12" y1="5" x2="12" y2="19" />
@@ -106,7 +106,7 @@ export default async function DashboardPage({
           {isAdmin && (
             <Link
               href="/admin/settings"
-              className="inline-flex items-center gap-2 rounded-xl border border-border bg-surface px-4 py-2.5 text-sm font-medium text-muted hover:bg-surface-hover hover:text-foreground transition-all duration-200"
+              className="inline-flex items-center gap-2 rounded-md border border-border bg-surface px-4 py-2.5 text-sm font-medium text-muted hover:bg-surface-hover hover:text-foreground transition-all duration-200"
             >
               <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="12" cy="12" r="3" />
@@ -124,10 +124,10 @@ export default async function DashboardPage({
         {stats.map((stat) => (
           <div
             key={stat.name}
-            className="group rounded-2xl bg-surface border border-border p-5 hover:shadow-lg hover:shadow-black/5 transition-all duration-300"
+            className="group rounded-xl bg-surface border border-border p-5 hover:shadow-lg hover:shadow-black/5 transition-all duration-300"
           >
             <div className="flex items-center justify-between mb-3">
-              <div className={`h-9 w-9 rounded-lg ${stat.bg} flex items-center justify-center transition-transform duration-300 group-hover:scale-110`}>
+              <div className={`h-9 w-9 rounded-md ${stat.bg} flex items-center justify-center transition-transform duration-300 group-hover:scale-110`}>
                 <svg className={`h-4.5 w-4.5 ${stat.color}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d={stat.icon} />
                 </svg>
@@ -139,7 +139,7 @@ export default async function DashboardPage({
         ))}
       </div>
 
-      <div className="rounded-2xl bg-surface border border-border overflow-hidden">
+      <div className="rounded-xl bg-surface border border-border overflow-hidden">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-6 py-4 border-b border-border">
           <h2 className="text-lg font-medium text-foreground">Tickets</h2>
           <TicketSearch defaultValue={q} />
@@ -232,7 +232,7 @@ export default async function DashboardPage({
                       <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                         <Link
                           href={`/tickets/${ticket.id}`}
-                          className="rounded-lg p-1.5 text-light hover:text-foreground hover:bg-background transition-all duration-150"
+                          className="rounded-md p-1.5 text-light hover:text-foreground hover:bg-background transition-all duration-150"
                           title="Ver detalle"
                         >
                           <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -242,7 +242,7 @@ export default async function DashboardPage({
                         </Link>
                         <Link
                           href={`/tickets/${ticket.id}`}
-                          className="rounded-lg p-1.5 text-light hover:text-accent hover:bg-accent/10 transition-all duration-150"
+                          className="rounded-md p-1.5 text-light hover:text-accent hover:bg-accent/10 transition-all duration-150"
                           title="Editar"
                         >
                           <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

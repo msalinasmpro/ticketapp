@@ -169,6 +169,11 @@ export async function updateUserRole(id: string, role: string): Promise<void> {
   })
 }
 
+export async function deleteUser(id: string): Promise<void> {
+  await fetch(`${SUPABASE_URL}/rest/v1/Notification?userId=eq.${encodeURIComponent(id)}`, { method: 'DELETE', headers })
+  await fetch(`${SUPABASE_URL}/rest/v1/User?id=eq.${encodeURIComponent(id)}`, { method: 'DELETE', headers })
+}
+
 export async function findEmailConfig(): Promise<Record<string, unknown> | null> {
   const rows = await rest<Record<string, unknown>[]>(`/rest/v1/EmailConfig?select=*&limit=1&order=createdAt.desc`)
   return rows[0] || null

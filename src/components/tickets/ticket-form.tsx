@@ -89,7 +89,7 @@ export function TicketForm({ initialData, onSubmit }: TicketFormProps) {
             required
             defaultValue={initialData?.title}
             placeholder="Ej: Computador no enciende"
-            className="block w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-light focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-all duration-200"
+            className="block w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-light focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-all duration-200"
           />
         </div>
       </div>
@@ -106,7 +106,7 @@ export function TicketForm({ initialData, onSubmit }: TicketFormProps) {
             required
             defaultValue={initialData?.company || ''}
             placeholder="Nombre de la empresa"
-            className="block w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-light focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-all duration-200"
+            className="block w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-light focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-all duration-200"
           />
         </div>
 
@@ -122,7 +122,7 @@ export function TicketForm({ initialData, onSubmit }: TicketFormProps) {
             pattern="^\+?[\d\s-]*$"
             defaultValue={initialData?.phone || ''}
             placeholder="+56 9 1234 5678"
-            className="block w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-light focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-all duration-200"
+            className="block w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-light focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-all duration-200"
           />
         </div>
       </div>
@@ -138,7 +138,7 @@ export function TicketForm({ initialData, onSubmit }: TicketFormProps) {
           required
           defaultValue={initialData?.description}
           placeholder="Describe el problema con el mayor detalle posible..."
-          className="block w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-light focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-all duration-200 resize-none"
+          className="block w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-light focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-all duration-200 resize-none"
         />
       </div>
 
@@ -152,7 +152,7 @@ export function TicketForm({ initialData, onSubmit }: TicketFormProps) {
             name="priority"
             required
             defaultValue={initialData?.priority || 'MEDIUM'}
-            className="block w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-all duration-200 appearance-none cursor-pointer"
+            className="block w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-all duration-200 appearance-none cursor-pointer"
           >
             <option value="LOW">Baja</option>
             <option value="MEDIUM">Media</option>
@@ -170,7 +170,7 @@ export function TicketForm({ initialData, onSubmit }: TicketFormProps) {
               id="status"
               name="status"
               defaultValue={initialData.status}
-              className="block w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-all duration-200 appearance-none cursor-pointer"
+              className="block w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-all duration-200 appearance-none cursor-pointer"
             >
               <option value="OPEN">Abierto</option>
               <option value="IN_PROGRESS">En Progreso</option>
@@ -186,7 +186,7 @@ export function TicketForm({ initialData, onSubmit }: TicketFormProps) {
           Archivo adjunto
         </label>
         {fileName ? (
-          <div className="flex items-center gap-3 rounded-xl border border-border bg-background px-4 py-3">
+          <div className="flex items-center gap-3 rounded-md border border-border bg-background px-4 py-3">
             <svg className="h-5 w-5 text-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
               <polyline points="14 2 14 8 20 8" />
@@ -206,7 +206,7 @@ export function TicketForm({ initialData, onSubmit }: TicketFormProps) {
         ) : (
           <div
             onClick={() => fileInputRef.current?.click()}
-            className="flex items-center justify-center gap-3 rounded-xl border-2 border-dashed border-border bg-background px-4 py-8 cursor-pointer hover:border-accent/50 hover:bg-accent/5 transition-all duration-200"
+            className="flex items-center justify-center gap-3 rounded-md border-2 border-dashed border-border bg-background px-4 py-8 cursor-pointer hover:border-accent/50 hover:bg-accent/5 transition-all duration-200"
           >
             <svg className="h-8 w-8 text-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
@@ -233,14 +233,14 @@ export function TicketForm({ initialData, onSubmit }: TicketFormProps) {
         <button
           type="button"
           onClick={() => router.back()}
-          className="rounded-xl border border-border bg-surface px-5 py-2.5 text-sm font-medium text-muted hover:bg-surface-hover transition-all duration-200"
+          className="rounded-md border border-border bg-surface px-5 py-2.5 text-sm font-medium text-muted hover:bg-surface-hover transition-all duration-200"
         >
           Cancelar
         </button>
         <button
           type="submit"
           disabled={loading}
-          className="rounded-xl bg-foreground px-5 py-2.5 text-sm font-medium text-background hover:bg-foreground/90 disabled:opacity-50 transition-all duration-200 shadow-sm"
+          className="rounded-md bg-foreground px-5 py-2.5 text-sm font-medium text-background hover:bg-foreground/90 disabled:opacity-50 transition-all duration-200 shadow-sm"
         >
           {loading ? (
             <span className="inline-flex items-center gap-2">

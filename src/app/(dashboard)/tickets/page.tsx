@@ -66,7 +66,7 @@ export default async function TicketsPage({
         </div>
         <Link
           href="/tickets/new"
-          className="inline-flex items-center gap-2 rounded-xl bg-foreground px-5 py-2.5 text-sm font-medium text-background hover:bg-foreground/90 transition-all duration-200 shadow-sm"
+          className="inline-flex items-center gap-2 rounded-md bg-foreground px-5 py-2.5 text-sm font-medium text-background hover:bg-foreground/90 transition-all duration-200 shadow-sm"
         >
           <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <line x1="12" y1="5" x2="12" y2="19" />
@@ -76,7 +76,7 @@ export default async function TicketsPage({
         </Link>
       </div>
 
-      <div className="rounded-2xl bg-surface border border-border overflow-hidden">
+      <div className="rounded-xl bg-surface border border-border overflow-hidden">
         <div className="overflow-x-auto">
           <table className="min-w-full">
             <thead>
@@ -112,7 +112,7 @@ export default async function TicketsPage({
                       <p className="text-sm text-light mb-4">No hay tickets</p>
                       <Link
                         href="/tickets/new"
-                        className="inline-flex items-center gap-2 rounded-xl bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-hover transition-colors duration-200"
+                        className="inline-flex items-center gap-2 rounded-md bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-hover transition-colors duration-200"
                       >
                         Crear primer ticket
                       </Link>

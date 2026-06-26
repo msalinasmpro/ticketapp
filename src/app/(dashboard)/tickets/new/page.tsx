@@ -31,7 +31,7 @@ export default function NewTicketPage() {
           Describe el problema que necesitas resolver.
         </p>
       </div>
-      <div className="rounded-2xl bg-surface border border-border p-8 shadow-sm">
+      <div className="rounded-xl bg-surface border border-border p-8 shadow-sm">
         <TicketForm onSubmit={handleSubmit} />
       </div>
     </div>

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
-import { findUsers, updateUserRole } from '@/lib/db'
+import { findUsers, updateUserRole, deleteUser } from '@/lib/db'
 
 export async function GET() {
   const session = await getServerSession(authOptions)
@@ -25,5 +25,19 @@ export async function PUT(req: Request) {
   }
 
   await updateUserRole(id, role)
+  return NextResponse.json({ success: true })
+}
+
+export async function DELETE(req: Request) {
+  const session = await getServerSession(authOptions)
+  if (!session || session.user.role !== 'admin') {
+    return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
+  }
+
+  const { id } = await req.json()
+  if (!id) return NextResponse.json({ error: 'ID requerido' }, { status: 400 })
+  if (id === session.user.id) return NextResponse.json({ error: 'No puedes eliminarte a ti mismo' }, { status: 400 })
+
+  await deleteUser(id)
   return NextResponse.json({ success: true })
 }

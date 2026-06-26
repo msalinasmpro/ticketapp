@@ -121,7 +121,7 @@ export default function TicketDetailPage({ params }: { params: Promise<{ id: str
             Actualiza la información del ticket.
           </p>
         </div>
-        <div className="rounded-2xl bg-surface border border-border p-8 shadow-sm">
+        <div className="rounded-xl bg-surface border border-border p-8 shadow-sm">
           <TicketForm
             initialData={ticket}
             onSubmit={handleUpdate}
@@ -148,7 +148,7 @@ export default function TicketDetailPage({ params }: { params: Promise<{ id: str
         <div className="flex items-center gap-3">
           <button
             onClick={() => setEditing(true)}
-            className="inline-flex items-center gap-2 rounded-xl border border-border bg-surface px-4 py-2.5 text-sm font-medium text-muted hover:bg-surface-hover transition-all duration-200"
+            className="inline-flex items-center gap-2 rounded-md border border-border bg-surface px-4 py-2.5 text-sm font-medium text-muted hover:bg-surface-hover transition-all duration-200"
           >
             <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
@@ -158,7 +158,7 @@ export default function TicketDetailPage({ params }: { params: Promise<{ id: str
           </button>
           <button
             onClick={handleDelete}
-            className="inline-flex items-center gap-2 rounded-xl bg-red-light border border-red/20 px-4 py-2.5 text-sm font-medium text-red hover:bg-red/10 transition-all duration-200"
+            className="inline-flex items-center gap-2 rounded-md bg-red-light border border-red/20 px-4 py-2.5 text-sm font-medium text-red hover:bg-red/10 transition-all duration-200"
           >
             <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <polyline points="3 6 5 6 21 6" />
@@ -169,7 +169,7 @@ export default function TicketDetailPage({ params }: { params: Promise<{ id: str
         </div>
       </div>
 
-      <div className="rounded-2xl bg-surface border border-border overflow-hidden">
+      <div className="rounded-xl bg-surface border border-border overflow-hidden">
         <div className="p-8">
           <div className="flex items-center gap-3 mb-6">
             <span className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-medium ${
@@ -244,7 +244,7 @@ export default function TicketDetailPage({ params }: { params: Promise<{ id: str
           {ticket.attachmentUrl && (
             <div className="mt-5 pt-5 border-t border-border">
               <dt className="text-xs font-medium text-light uppercase tracking-wider mb-2">Archivo adjunto</dt>
-              <div className="inline-flex items-center gap-2 rounded-lg bg-background border border-border px-3 py-2">
+              <div className="inline-flex items-center gap-2 rounded-md bg-background border border-border px-3 py-2">
                 <svg className="h-4 w-4 text-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
                   <polyline points="14 2 14 8 20 8" />

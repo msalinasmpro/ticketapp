@@ -18,6 +18,7 @@ export default function AdminUsersPage() {
   const [users, setUsers] = useState<User[]>([])
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState<string | null>(null)
+  const [confirmDelete, setConfirmDelete] = useState<string | null>(null)
 
   const isAdmin = session?.user?.role === 'admin'
 
@@ -44,6 +45,18 @@ export default function AdminUsersPage() {
     setSaving(null)
   }
 
+  async function handleDelete(id: string) {
+    setSaving(id)
+    await fetch('/api/users', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id }),
+    })
+    setUsers(prev => prev.filter(u => u.id !== id))
+    setConfirmDelete(null)
+    setSaving(null)
+  }
+
   if (!isAdmin) return null
 
   return (
@@ -64,7 +77,7 @@ export default function AdminUsersPage() {
           </div>
         </div>
       ) : (
-        <div className="rounded-2xl bg-surface border border-border overflow-hidden">
+        <div className="rounded-xl bg-surface border border-border overflow-hidden">
           <div className="overflow-x-auto">
             <table className="min-w-full">
               <thead>
@@ -100,27 +113,45 @@ export default function AdminUsersPage() {
                     </td>
                     <td className="px-6 py-4">
                       {user.id !== session?.user?.id && (
-                        <button
-                          onClick={() => toggleRole(user)}
-                          disabled={saving === user.id}
-                          className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all duration-200 ${
-                            user.role === 'admin'
-                              ? 'border border-border text-muted hover:bg-surface-hover hover:text-foreground'
-                              : 'bg-accent/10 text-accent hover:bg-accent/20'
-                          } disabled:opacity-50`}
-                        >
-                          {saving === user.id ? (
-                            <svg className="h-3 w-3 animate-spin" viewBox="0 0 24 24" fill="none">
-                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                            </svg>
-                          ) : user.role === 'admin' ? (
-                            <svg className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12" /></svg>
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => toggleRole(user)}
+                            disabled={saving === user.id}
+                            className={`inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-all duration-200 ${
+                              user.role === 'admin'
+                                ? 'border border-border text-muted hover:bg-surface-hover hover:text-foreground'
+                                : 'bg-accent/10 text-accent hover:bg-accent/20'
+                            } disabled:opacity-50`}
+                          >
+                            {user.role === 'admin' ? 'Quitar admin' : 'Hacer admin'}
+                          </button>
+
+                          {confirmDelete === user.id ? (
+                            <div className="flex items-center gap-1">
+                              <button
+                                onClick={() => handleDelete(user.id)}
+                                disabled={saving === user.id}
+                                className="rounded-md bg-red/10 px-2.5 py-1.5 text-xs font-medium text-red hover:bg-red/20 transition-colors disabled:opacity-50"
+                              >
+                                {saving === user.id ? '...' : 'Confirmar'}
+                              </button>
+                              <button
+                                onClick={() => setConfirmDelete(null)}
+                                className="rounded-md px-2.5 py-1.5 text-xs font-medium text-light hover:text-foreground hover:bg-surface-hover transition-colors"
+                              >
+                                Cancelar
+                              </button>
+                            </div>
                           ) : (
-                            <svg className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" /></svg>
+                            <button
+                              onClick={() => setConfirmDelete(user.id)}
+                              className="inline-flex items-center gap-1 rounded-md border border-border px-2.5 py-1.5 text-xs font-medium text-muted hover:border-red/50 hover:text-red hover:bg-red-light transition-all duration-200"
+                            >
+                              <svg className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6" /><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" /></svg>
+                              Eliminar
+                            </button>
                           )}
-                          {user.role === 'admin' ? 'Quitar admin' : 'Hacer admin'}
-                        </button>
+                        </div>
                       )}
                     </td>
                   </tr>

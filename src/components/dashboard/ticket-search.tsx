@@ -33,7 +33,7 @@ export function TicketSearch({ defaultValue }: { defaultValue?: string }) {
         value={value}
         onChange={(e) => handleSearch(e.target.value)}
         placeholder="Buscar por nombre, empresa, teléfono..."
-        className="w-full rounded-xl border border-border bg-background pl-9 pr-4 py-2.5 text-sm text-foreground placeholder:text-light focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-all duration-200"
+        className="w-full rounded-md border border-border bg-background pl-9 pr-4 py-2.5 text-sm text-foreground placeholder:text-light focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-all duration-200"
       />
       {value && (
         <button

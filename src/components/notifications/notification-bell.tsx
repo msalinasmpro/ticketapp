@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 interface Notification {
   id: string
@@ -17,6 +18,7 @@ export function NotificationBell() {
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
+  const router = useRouter()
 
   const unreadCount = notifications.filter((n) => !n.read).length
 
@@ -84,7 +86,7 @@ export function NotificationBell() {
     <div className="relative" ref={ref}>
       <button
         onClick={() => setOpen(!open)}
-        className="relative rounded-xl border border-border bg-surface p-2.5 text-muted hover:bg-surface-hover hover:text-foreground transition-all duration-200"
+        className="relative rounded-md border border-border bg-surface p-2.5 text-muted hover:bg-surface-hover hover:text-foreground transition-all duration-200"
       >
         <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" />
@@ -98,7 +100,7 @@ export function NotificationBell() {
       </button>
 
       {open && (
-        <div className="absolute right-0 mt-2 w-96 rounded-2xl bg-surface border border-border shadow-xl shadow-black/10 z-50 overflow-hidden">
+        <div className="absolute right-0 mt-2 w-96 rounded-xl bg-surface border border-border shadow-xl shadow-black/10 z-50 overflow-hidden">
           <div className="flex items-center justify-between px-5 py-4 border-b border-border">
             <h3 className="text-sm font-semibold text-foreground">Notificaciones</h3>
             {unreadCount > 0 && (
@@ -128,6 +130,7 @@ export function NotificationBell() {
                     if (!notif.read) markAsRead(notif.id)
                     if (notif.ticketId) {
                       setOpen(false)
+                      router.push(`/tickets/${notif.ticketId}`)
                     }
                   }}
                   className={`flex items-start gap-3 px-5 py-3.5 border-b border-border last:border-0 cursor-pointer hover:bg-surface-hover transition-colors duration-150 ${
@@ -141,13 +144,7 @@ export function NotificationBell() {
                     <div className="flex items-center gap-2 mt-1.5">
                       <span className="text-[10px] text-light">{getTimeAgo(notif.createdAt)}</span>
                       {notif.ticketId && (
-                        <Link
-                          href={`/tickets/${notif.ticketId}`}
-                          onClick={(e) => e.stopPropagation()}
-                          className="text-[10px] font-medium text-accent hover:text-accent-hover"
-                        >
-                          Ver ticket →
-                        </Link>
+                        <span className="text-[10px] font-medium text-accent">Ver ticket →</span>
                       )}
                     </div>
                   </div>
