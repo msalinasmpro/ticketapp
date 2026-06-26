@@ -26,6 +26,8 @@ export interface DbTicket {
   priority: string
   phone: string | null
   company: string | null
+  clientName: string | null
+  reportTo: string | null
   attachmentUrl: string | null
   creatorId: string
   assigneeId: string | null
@@ -100,7 +102,7 @@ export async function findTickets(opts: {
 }
 
 export async function findTicketById(id: string): Promise<DbTicket | null> {
-  const rows = await rest<DbTicket[]>(`/rest/v1/Ticket?select=id,ticketNumber,title,description,status,priority,phone,company,attachmentUrl,creatorId,assigneeId,createdAt,updatedAt,creator:User!Ticket_creatorId_fkey(id,name,email),assignee:User!Ticket_assigneeId_fkey(id,name,email)&id=eq.${encodeURIComponent(id)}&limit=1`)
+  const rows = await rest<DbTicket[]>(`/rest/v1/Ticket?select=id,ticketNumber,title,description,status,priority,phone,company,clientName,reportTo,attachmentUrl,creatorId,assigneeId,createdAt,updatedAt,creator:User!Ticket_creatorId_fkey(id,name,email),assignee:User!Ticket_assigneeId_fkey(id,name,email)&id=eq.${encodeURIComponent(id)}&limit=1`)
   return rows[0] || null
 }
 

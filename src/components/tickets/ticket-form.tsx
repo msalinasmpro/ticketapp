@@ -12,12 +12,15 @@ interface TicketFormProps {
     assigneeId?: string | null
     phone?: string | null
     company?: string | null
+    clientName?: string | null
+    reportTo?: string | null
     attachmentUrl?: string | null
   }
   onSubmit: (data: Record<string, string | undefined>) => Promise<void>
+  showClientName?: boolean
 }
 
-export function TicketForm({ initialData, onSubmit }: TicketFormProps) {
+export function TicketForm({ initialData, onSubmit, showClientName }: TicketFormProps) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -60,6 +63,8 @@ export function TicketForm({ initialData, onSubmit }: TicketFormProps) {
         assigneeId: formData.get('assigneeId') as string || undefined,
         phone: formData.get('phone') as string || undefined,
         company: formData.get('company') as string || undefined,
+        clientName: formData.get('clientName') as string || undefined,
+        reportTo: formData.get('reportTo') as string || undefined,
         attachmentUrl,
       })
     } catch {
@@ -110,22 +115,72 @@ export function TicketForm({ initialData, onSubmit }: TicketFormProps) {
           />
         </div>
 
-        <div>
-          <label htmlFor="phone" className="block text-sm font-medium text-foreground mb-1.5">
-            Teléfono de contacto
-          </label>
-          <input
-            id="phone"
-            name="phone"
-            type="tel"
-            inputMode="tel"
-            pattern="^\+?[\d\s-]*$"
-            defaultValue={initialData?.phone || ''}
-            placeholder="+56 9 1234 5678"
-            className="block w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-light focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-all duration-200"
-          />
-        </div>
+        {showClientName ? (
+          <div>
+            <label htmlFor="clientName" className="block text-sm font-medium text-foreground mb-1.5">
+              Nombre del cliente *
+            </label>
+            <input
+              id="clientName"
+              name="clientName"
+              type="text"
+              required
+              defaultValue={initialData?.clientName || ''}
+              placeholder="Nombre completo del cliente"
+              className="block w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-light focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-all duration-200"
+            />
+          </div>
+        ) : (
+          <div>
+            <label htmlFor="phone" className="block text-sm font-medium text-foreground mb-1.5">
+              Teléfono de contacto
+            </label>
+            <input
+              id="phone"
+              name="phone"
+              type="tel"
+              inputMode="tel"
+              pattern="^\+?[\d\s-]*$"
+              defaultValue={initialData?.phone || ''}
+              placeholder="+56 9 1234 5678"
+              className="block w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-light focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-all duration-200"
+            />
+          </div>
+        )}
       </div>
+
+      {showClientName && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div>
+            <label htmlFor="phone" className="block text-sm font-medium text-foreground mb-1.5">
+              Teléfono de contacto
+            </label>
+            <input
+              id="phone"
+              name="phone"
+              type="tel"
+              inputMode="tel"
+              pattern="^\+?[\d\s-]*$"
+              defaultValue={initialData?.phone || ''}
+              placeholder="+56 9 1234 5678"
+              className="block w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-light focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-all duration-200"
+            />
+          </div>
+          <div>
+            <label htmlFor="reportTo" className="block text-sm font-medium text-foreground mb-1.5">
+              Reportar ticket a
+            </label>
+            <input
+              id="reportTo"
+              name="reportTo"
+              type="text"
+              defaultValue={initialData?.reportTo || ''}
+              placeholder="Nombre de la empresa destino"
+              className="block w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-light focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-all duration-200"
+            />
+          </div>
+        </div>
+      )}
 
       <div>
         <label htmlFor="description" className="block text-sm font-medium text-foreground mb-1.5">

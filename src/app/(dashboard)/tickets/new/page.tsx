@@ -1,11 +1,14 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { TicketForm } from '@/components/tickets/ticket-form'
 
 export default function NewTicketPage() {
   const router = useRouter()
+  const { data: session } = useSession()
+  const isAdmin = session?.user?.role === 'admin'
 
   async function handleSubmit(data: Record<string, unknown>) {
     const res = await fetch('/api/tickets', {
@@ -37,7 +40,7 @@ export default function NewTicketPage() {
         </p>
       </div>
       <div className="rounded-xl bg-surface border border-border p-8 shadow-sm">
-        <TicketForm onSubmit={handleSubmit} />
+        <TicketForm onSubmit={handleSubmit} showClientName={isAdmin} />
       </div>
     </div>
   )

@@ -10,6 +10,8 @@ interface TicketListItem {
   title: string
   status: string
   priority: string
+  clientName: string | null
+  reportTo: string | null
   createdAt: string
   creator: { id: string; name: string; email: string }
   assignee?: { id: string; name: string; email: string } | null
@@ -33,7 +35,7 @@ export default async function TicketsPage({
   if (status) whereParts.push(`status=eq.${status}`)
   if (priority) whereParts.push(`priority=eq.${priority}`)
 
-  const select = 'id,ticketNumber,title,status,priority,createdAt,creator:User!Ticket_creatorId_fkey(id,name,email),assignee:User!Ticket_assigneeId_fkey(id,name,email)'
+  const select = 'id,ticketNumber,title,status,priority,clientName,reportTo,createdAt,creator:User!Ticket_creatorId_fkey(id,name,email),assignee:User!Ticket_assigneeId_fkey(id,name,email)'
   const tickets = await findTickets({
     select,
     where: whereParts.join('&'),
@@ -100,6 +102,16 @@ export default async function TicketsPage({
                 </th>
                 {isAdmin && (
                   <th className="px-6 py-3.5 text-left text-xs font-medium text-light uppercase tracking-wider">
+                    Cliente
+                  </th>
+                )}
+                {isAdmin && (
+                  <th className="px-6 py-3.5 text-left text-xs font-medium text-light uppercase tracking-wider">
+                    Reportar a
+                  </th>
+                )}
+                {isAdmin && (
+                  <th className="px-6 py-3.5 text-left text-xs font-medium text-light uppercase tracking-wider">
                     Asignado
                   </th>
                 )}
@@ -160,6 +172,16 @@ export default async function TicketsPage({
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-muted">
                       {ticket.creator.name}
                     </td>
+                    {isAdmin && (
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-muted">
+                        {ticket.clientName || '-'}
+                      </td>
+                    )}
+                    {isAdmin && (
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-muted">
+                        {ticket.reportTo || '-'}
+                      </td>
+                    )}
                     {isAdmin && (
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-muted">
                         {ticket.assignee?.name || (

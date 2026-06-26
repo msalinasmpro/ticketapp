@@ -13,6 +13,8 @@ interface DashboardTicket {
   status: string
   priority: string
   company: string | null
+  clientName: string | null
+  reportTo: string | null
   phone: string | null
   createdAt: string
   creator: { name: string }
@@ -45,7 +47,7 @@ export default async function DashboardPage({
     countTickets(countWhere ? `${countWhere}&status=eq.CLOSED` : 'status=eq.CLOSED'),
   ])
 
-  const select = 'id,ticketNumber,title,status,priority,company,phone,createdAt,creator:User!Ticket_creatorId_fkey(name),assignee:User!Ticket_assigneeId_fkey(name)'
+  const select = 'id,ticketNumber,title,status,priority,company,clientName,reportTo,phone,createdAt,creator:User!Ticket_creatorId_fkey(name),assignee:User!Ticket_assigneeId_fkey(name)'
 
   let recentTickets: DashboardTicket[]
   if (q) {
@@ -243,6 +245,16 @@ export default async function DashboardPage({
                 </th>
                 {isAdmin && (
                   <th className="px-6 py-2 text-left text-[11px] font-medium text-muted uppercase tracking-[0.08em] hidden md:table-cell">
+                    Cliente
+                  </th>
+                )}
+                {isAdmin && (
+                  <th className="px-6 py-2 text-left text-[11px] font-medium text-muted uppercase tracking-[0.08em] hidden md:table-cell">
+                    Reportar a
+                  </th>
+                )}
+                {isAdmin && (
+                  <th className="px-6 py-2 text-left text-[11px] font-medium text-muted uppercase tracking-[0.08em] hidden md:table-cell">
                     Asignado
                   </th>
                 )}
@@ -307,6 +319,16 @@ export default async function DashboardPage({
                         {priorityLabels[ticket.priority] || ticket.priority}
                       </span>
                     </td>
+                    {isAdmin && (
+                      <td className="px-6 py-2 hidden md:table-cell">
+                        <span className="text-[13px] text-muted">{ticket.clientName || '-'}</span>
+                      </td>
+                    )}
+                    {isAdmin && (
+                      <td className="px-6 py-2 hidden md:table-cell">
+                        <span className="text-[13px] text-muted">{ticket.reportTo || '-'}</span>
+                      </td>
+                    )}
                     {isAdmin && (
                       <td className="px-6 py-2 hidden md:table-cell">
                         {ticket.assignee?.name ? (
