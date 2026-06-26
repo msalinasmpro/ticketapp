@@ -125,37 +125,52 @@ export default async function DashboardPage({
       </div>
 
       {isAdmin && (
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
           <Link
             href="/tickets"
-            className="group flex items-center gap-3 rounded-[6px] border border-border bg-accent px-5 h-[28px] text-[13px] font-medium text-black hover:bg-accent-hover transition-colors duration-[120ms]"
+            className="group flex flex-col items-start gap-3 rounded-md border border-border bg-surface p-6 hover:bg-surface-hover transition-colors duration-150"
           >
-            <svg className="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-            </svg>
-            Ver Tickets
+            <div className="h-10 w-10 rounded-md bg-[#3ecf8e]/10 flex items-center justify-center">
+              <svg className="h-5 w-5 text-[#3ecf8e]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+              </svg>
+            </div>
+            <div>
+              <p className="text-[15px] font-semibold text-foreground">Ver Tickets</p>
+              <p className="text-[13px] text-muted mt-0.5">Administra y revisa todos los tickets</p>
+            </div>
           </Link>
           <Link
             href="/admin/users"
-            className="group flex items-center gap-3 rounded-[6px] border border-border bg-accent px-5 h-[28px] text-[13px] font-medium text-black hover:bg-accent-hover transition-colors duration-[120ms]"
+            className="group flex flex-col items-start gap-3 rounded-md border border-border bg-surface p-6 hover:bg-surface-hover transition-colors duration-150"
           >
-            <svg className="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
-              <circle cx="9" cy="7" r="4" />
-              <path d="M23 21v-2a4 4 0 00-3-3.87" />
-              <path d="M16 3.13a4 4 0 010 7.75" />
-            </svg>
-            Gestionar Usuarios
+            <div className="h-10 w-10 rounded-md bg-[#3ecf8e]/10 flex items-center justify-center">
+              <svg className="h-5 w-5 text-[#3ecf8e]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M23 21v-2a4 4 0 00-3-3.87" />
+                <path d="M16 3.13a4 4 0 010 7.75" />
+              </svg>
+            </div>
+            <div>
+              <p className="text-[15px] font-semibold text-foreground">Gestionar Usuarios</p>
+              <p className="text-[13px] text-muted mt-0.5">Promueve o elimina usuarios del sistema</p>
+            </div>
           </Link>
           <Link
             href="/admin/settings"
-            className="group flex items-center gap-3 rounded-[6px] border border-border bg-accent px-5 h-[28px] text-[13px] font-medium text-black hover:bg-accent-hover transition-colors duration-[120ms]"
+            className="group flex flex-col items-start gap-3 rounded-md border border-border bg-surface p-6 hover:bg-surface-hover transition-colors duration-150"
           >
-            <svg className="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="12" r="3" />
-              <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z" />
-            </svg>
-            Configuración
+            <div className="h-10 w-10 rounded-md bg-[#3ecf8e]/10 flex items-center justify-center">
+              <svg className="h-5 w-5 text-[#3ecf8e]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="3" />
+                <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z" />
+              </svg>
+            </div>
+            <div>
+              <p className="text-[15px] font-semibold text-foreground">Configuración</p>
+              <p className="text-[13px] text-muted mt-0.5">Ajustes del sistema de email y notificaciones</p>
+            </div>
           </Link>
         </div>
       )}
