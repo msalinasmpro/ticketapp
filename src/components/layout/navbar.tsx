@@ -39,6 +39,7 @@ export function Navbar() {
               <Link href="/" className="rounded-md px-3 py-1.5 text-sm font-medium text-muted hover:text-foreground transition-colors">Dashboard</Link>
               <Link href="/tickets" className="rounded-md px-3 py-1.5 text-sm font-medium text-muted hover:text-foreground transition-colors">Tickets</Link>
               {isAdmin && <Link href="/admin/settings" className="rounded-md px-3 py-1.5 text-sm font-medium text-muted hover:text-foreground transition-colors">Config</Link>}
+              {isAdmin && <Link href="/admin/users" className="rounded-md px-3 py-1.5 text-sm font-medium text-muted hover:text-foreground transition-colors">Usuarios</Link>}
             </div>
           </div>
 

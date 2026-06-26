@@ -25,8 +25,10 @@ export default async function TicketsPage({
   const params = await searchParams
   const status = params.status
   const priority = params.priority
+  const isAdmin = session.user.role === 'admin'
 
   const whereParts: string[] = []
+  if (!isAdmin) whereParts.push(`creatorId=eq.${session.user.id}`)
   if (status) whereParts.push(`status=eq.${status}`)
   if (priority) whereParts.push(`priority=eq.${priority}`)
 

@@ -29,13 +29,20 @@ export default async function DashboardPage({
 
   const params = await searchParams
   const q = params.q || ''
+  const isAdmin = session.user.role === 'admin'
+  const userId = session.user.id
+
+  const whereParts: string[] = []
+  if (!isAdmin) whereParts.push(`creatorId=eq.${userId}`)
+
+  const countWhere = whereParts.length > 0 ? whereParts.join('&') : undefined
 
   const [total, open, inProgress, resolved, closed] = await Promise.all([
-    countTickets(),
-    countTickets('status=eq.OPEN'),
-    countTickets('status=eq.IN_PROGRESS'),
-    countTickets('status=eq.RESOLVED'),
-    countTickets('status=eq.CLOSED'),
+    countTickets(countWhere),
+    countTickets(countWhere ? `${countWhere}&status=eq.OPEN` : 'status=eq.OPEN'),
+    countTickets(countWhere ? `${countWhere}&status=eq.IN_PROGRESS` : 'status=eq.IN_PROGRESS'),
+    countTickets(countWhere ? `${countWhere}&status=eq.RESOLVED` : 'status=eq.RESOLVED'),
+    countTickets(countWhere ? `${countWhere}&status=eq.CLOSED` : 'status=eq.CLOSED'),
   ])
 
   const select = 'id,title,status,priority,company,phone,createdAt,creator:User!Ticket_creatorId_fkey(name),assignee:User!Ticket_assigneeId_fkey(name)'
@@ -44,10 +51,12 @@ export default async function DashboardPage({
   if (q) {
     const eq = encodeURIComponent(q)
     const fetchHeaders = { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' }
-    const url = `${SUPABASE_URL}/rest/v1/Ticket?select=${select}&or=(title.ilike.*${eq}*,company.ilike.*${eq}*,phone.ilike.*${eq}*,description.ilike.*${eq}*)&order=createdAt.desc&limit=10`
+    const searchWhere = !isAdmin ? `&creatorId=eq.${userId}` : ''
+    const url = `${SUPABASE_URL}/rest/v1/Ticket?select=${select}&or=(title.ilike.*${eq}*,company.ilike.*${eq}*,phone.ilike.*${eq}*,description.ilike.*${eq}*)${searchWhere}&order=createdAt.desc&limit=10`
     recentTickets = await fetch(url, { headers: fetchHeaders }).then(r => r.json())
   } else {
-    recentTickets = await findTickets({ select, order: 'createdAt.desc', limit: 10 }) as unknown as DashboardTicket[]
+    const ticketWhere = !isAdmin ? `creatorId=eq.${userId}` : undefined
+    recentTickets = await findTickets({ select, where: ticketWhere, order: 'createdAt.desc', limit: 10 }) as unknown as DashboardTicket[]
   }
 
   const stats = [
@@ -71,8 +80,6 @@ export default async function DashboardPage({
     HIGH: 'Alta',
     CRITICAL: 'Crítica',
   }
-
-  const isAdmin = session?.user?.role === 'admin'
 
   return (
     <div>

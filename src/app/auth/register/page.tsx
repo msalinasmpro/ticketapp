@@ -1,13 +1,34 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
+function Toast({ message, type, onClose }: { message: string; type: 'success' | 'error'; onClose: () => void }) {
+  useEffect(() => {
+    const t = setTimeout(onClose, 4000)
+    return () => clearTimeout(t)
+  }, [onClose])
+
+  return (
+    <div className={`fixed top-6 right-6 z-50 flex items-center gap-3 rounded-xl border px-5 py-3.5 shadow-lg transition-all duration-300 ${
+      type === 'success' ? 'bg-green-light border-green/30 text-green' : 'bg-red-light border-red/30 text-red'
+    }`} style={{ animation: 'slideIn 0.3s ease-out' }}>
+      {type === 'success' ? (
+        <svg className="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
+      ) : (
+        <svg className="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10" /><line x1="15" y1="9" x2="9" y2="15" /><line x1="9" y1="9" x2="15" y2="15" /></svg>
+      )}
+      <span className="text-sm font-medium">{message}</span>
+    </div>
+  )
+}
+
 export default function RegisterPage() {
   const router = useRouter()
   const [error, setError] = useState('')
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null)
   const [loading, setLoading] = useState(false)
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -36,15 +57,20 @@ export default function RegisterPage() {
     setLoading(false)
 
     if (res.ok) {
-      router.push('/auth/login')
+      setToast({ message: 'Cuenta creada correctamente. Redirigiendo al login...', type: 'success' })
+      setTimeout(() => router.push('/auth/login'), 2000)
     } else {
       const data = await res.json()
-      setError(data.error || 'Error al registrar')
+      const msg = data.error || 'Error al registrar'
+      setError(msg)
+      setToast({ message: msg, type: 'error' })
     }
   }
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
+      <style>{`@keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }`}</style>
+      {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
       <div className="w-full max-w-[400px]">
         <div className="mb-8 text-center">
           <div className="mx-auto mb-4 h-12 w-12 rounded-2xl bg-accent flex items-center justify-center">
