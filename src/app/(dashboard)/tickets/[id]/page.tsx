@@ -15,6 +15,9 @@ interface Ticket {
   priority: string
   phone: string | null
   company: string | null
+  clientName: string | null
+  reportTo: string | null
+  solution: string | null
   attachmentUrl: string | null
   creatorId: string
   assigneeId: string | null
@@ -208,6 +211,15 @@ export default function TicketDetailPage({ params }: { params: Promise<{ id: str
               {ticket.description}
             </p>
           </div>
+
+          {isAdmin && ticket.solution && (
+            <div className="mt-6 pt-6 border-t border-border">
+              <h3 className="text-sm font-semibold text-foreground mb-2">Solución del problema</h3>
+              <p className="text-foreground whitespace-pre-wrap leading-relaxed text-sm">
+                {ticket.solution}
+              </p>
+            </div>
+          )}
         </div>
 
         <div className="border-t border-border bg-surface-hover/50 px-8 py-5">

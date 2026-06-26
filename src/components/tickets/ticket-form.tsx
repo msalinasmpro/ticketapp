@@ -14,6 +14,7 @@ interface TicketFormProps {
     company?: string | null
     clientName?: string | null
     reportTo?: string | null
+    solution?: string | null
     attachmentUrl?: string | null
   }
   onSubmit: (data: Record<string, string | undefined>) => Promise<void>
@@ -66,6 +67,7 @@ export function TicketForm({ initialData, onSubmit, showClientName, assignees = 
         company: formData.get('company') as string || undefined,
         clientName: formData.get('clientName') as string || undefined,
         reportTo: formData.get('reportTo') as string || undefined,
+        solution: formData.get('solution') as string || undefined,
         attachmentUrl,
       })
     } catch {
@@ -255,6 +257,22 @@ export function TicketForm({ initialData, onSubmit, showClientName, assignees = 
           </div>
         )}
       </div>
+
+      {showClientName && initialData && (
+        <div>
+          <label htmlFor="solution" className="block text-sm font-medium text-foreground mb-1.5">
+            Solución del problema
+          </label>
+          <textarea
+            id="solution"
+            name="solution"
+            rows={4}
+            defaultValue={initialData?.solution || ''}
+            placeholder="Describe la solución aplicada al problema..."
+            className="block w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-light focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-all duration-200 resize-none"
+          />
+        </div>
+      )}
 
       <div>
         <label className="block text-sm font-medium text-foreground mb-1.5">
