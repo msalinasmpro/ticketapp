@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
-import { prisma } from '@/lib/prisma'
+import { findTickets, createTicket, createNotification, findEmailConfig, findUsers } from '@/lib/db'
 import { ticketSchema } from '@/lib/validations'
 import { sendEmail, buildTicketEmail } from '@/lib/email'
 
@@ -14,18 +14,16 @@ export async function GET(req: Request) {
   const priority = searchParams.get('priority')
   const assigneeId = searchParams.get('assigneeId')
 
-  const where: Record<string, string> = {}
-  if (status) where.status = status
-  if (priority) where.priority = priority
-  if (assigneeId) where.assigneeId = assigneeId
+  const whereParts: string[] = []
+  if (status) whereParts.push(`status=eq.${status}`)
+  if (priority) whereParts.push(`priority=eq.${priority}`)
+  if (assigneeId) whereParts.push(`assigneeId=eq.${assigneeId}`)
 
-  const tickets = await prisma.ticket.findMany({
-    where,
-    include: {
-      creator: { select: { id: true, name: true, email: true } },
-      assignee: { select: { id: true, name: true, email: true } },
-    },
-    orderBy: { createdAt: 'desc' },
+  const select = '*,creator:User!Ticket_creatorId_fkey(id,name,email),assignee:User!Ticket_assigneeId_fkey(id,name,email)'
+  const tickets = await findTickets({
+    select,
+    where: whereParts.join('&'),
+    order: 'createdAt.desc',
   })
 
   return NextResponse.json(tickets)
@@ -39,34 +37,25 @@ export async function POST(req: Request) {
     const body = await req.json()
     const data = ticketSchema.parse(body)
 
-    const ticket = await prisma.ticket.create({
-      data: { ...data, creatorId: session.user.id },
-      include: { creator: true, assignee: true },
-    })
+    const ticket = await createTicket({ ...data, creatorId: session.user.id })
 
-    const admins = await prisma.user.findMany({
-      where: { role: 'admin' },
-      select: { id: true, email: true },
-    })
+    const users = await findUsers()
+    const admins = users.filter(u => u.role === 'admin')
 
     for (const admin of admins) {
-      await prisma.notification.create({
-        data: {
-          userId: admin.id,
-          type: 'NEW_TICKET',
-          title: 'Nuevo ticket creado',
-          message: `${session.user.name || 'Usuario'} ha creado el ticket "${ticket.title}"`,
-          ticketId: ticket.id,
-        },
+      await createNotification({
+        userId: admin.id,
+        type: 'NEW_TICKET',
+        title: 'Nuevo ticket creado',
+        message: `${session.user.name || 'Usuario'} ha creado el ticket "${ticket.title}"`,
+        ticketId: ticket.id,
       })
 
-      const emailConfig = await prisma.emailConfig.findFirst({
-        where: { enabled: true },
-      })
+      const emailConfig = await findEmailConfig()
 
-      if (emailConfig) {
+      if (emailConfig && emailConfig.enabled) {
         await sendEmail({
-          to: emailConfig.from,
+          to: emailConfig.from as string,
           subject: `[TicketApp] Nuevo ticket: ${ticket.title}`,
           html: buildTicketEmail({
             title: ticket.title,
@@ -74,8 +63,8 @@ export async function POST(req: Request) {
             priority: ticket.priority,
             company: ticket.company,
             phone: ticket.phone,
-            creatorName: ticket.creator.name,
-            creatorEmail: ticket.creator.email,
+            creatorName: ticket.creator?.name || 'Desconocido',
+            creatorEmail: ticket.creator?.email || '',
           }),
         })
       }

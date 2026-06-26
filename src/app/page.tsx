@@ -1,11 +1,23 @@
 import { redirect } from 'next/navigation'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
-import { prisma } from '@/lib/prisma'
+import { countTickets, findTickets, SUPABASE_URL, SUPABASE_KEY } from '@/lib/db'
 import Link from 'next/link'
 import { DashboardActions } from '@/components/dashboard/dashboard-actions'
 import { TicketSearch } from '@/components/dashboard/ticket-search'
 import { NotificationBell } from '@/components/notifications/notification-bell'
+
+interface DashboardTicket {
+  id: string
+  title: string
+  status: string
+  priority: string
+  company: string | null
+  phone: string | null
+  createdAt: string
+  creator: { name: string }
+  assignee?: { name: string } | null
+}
 
 export default async function DashboardPage({
   searchParams,
@@ -18,40 +30,25 @@ export default async function DashboardPage({
   const params = await searchParams
   const q = params.q || ''
 
-  const where: Record<string, unknown> = {}
-  if (q) {
-    where.OR = [
-      { title: { contains: q } },
-      { company: { contains: q } },
-      { phone: { contains: q } },
-      { description: { contains: q } },
-    ]
-  }
-
   const [total, open, inProgress, resolved, closed] = await Promise.all([
-    prisma.ticket.count(),
-    prisma.ticket.count({ where: { status: 'OPEN' } }),
-    prisma.ticket.count({ where: { status: 'IN_PROGRESS' } }),
-    prisma.ticket.count({ where: { status: 'RESOLVED' } }),
-    prisma.ticket.count({ where: { status: 'CLOSED' } }),
+    countTickets(),
+    countTickets('status=eq.OPEN'),
+    countTickets('status=eq.IN_PROGRESS'),
+    countTickets('status=eq.RESOLVED'),
+    countTickets('status=eq.CLOSED'),
   ])
 
-  const recentTickets = await prisma.ticket.findMany({
-    where,
-    take: 10,
-    orderBy: { createdAt: 'desc' },
-    select: {
-      id: true,
-      title: true,
-      status: true,
-      priority: true,
-      company: true,
-      phone: true,
-      createdAt: true,
-      creator: { select: { name: true } },
-      assignee: { select: { name: true } },
-    },
-  })
+  const select = 'id,title,status,priority,company,phone,createdAt,creator:User!Ticket_creatorId_fkey(name),assignee:User!Ticket_assigneeId_fkey(name)'
+
+  let recentTickets: DashboardTicket[]
+  if (q) {
+    const eq = encodeURIComponent(q)
+    const fetchHeaders = { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' }
+    const url = `${SUPABASE_URL}/rest/v1/Ticket?select=${select}&or=(title.ilike.*${eq}*,company.ilike.*${eq}*,phone.ilike.*${eq}*,description.ilike.*${eq}*)&order=createdAt.desc&limit=10`
+    recentTickets = await fetch(url, { headers: fetchHeaders }).then(r => r.json())
+  } else {
+    recentTickets = await findTickets({ select, order: 'createdAt.desc', limit: 10 }) as unknown as DashboardTicket[]
+  }
 
   const stats = [
     { name: 'Total', value: total, icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2', color: 'text-accent', bg: 'bg-accent/10' },

@@ -1,8 +1,18 @@
 import { redirect } from 'next/navigation'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
-import { prisma } from '@/lib/prisma'
+import { findTickets } from '@/lib/db'
 import Link from 'next/link'
+
+interface TicketListItem {
+  id: string
+  title: string
+  status: string
+  priority: string
+  createdAt: string
+  creator: { id: string; name: string; email: string }
+  assignee?: { id: string; name: string; email: string } | null
+}
 
 export default async function TicketsPage({
   searchParams,
@@ -16,18 +26,16 @@ export default async function TicketsPage({
   const status = params.status
   const priority = params.priority
 
-  const where: { status?: string; priority?: string } = {}
-  if (status) where.status = status
-  if (priority) where.priority = priority
+  const whereParts: string[] = []
+  if (status) whereParts.push(`status=eq.${status}`)
+  if (priority) whereParts.push(`priority=eq.${priority}`)
 
-  const tickets = await prisma.ticket.findMany({
-    where: Object.keys(where).length > 0 ? where : undefined,
-    include: {
-      creator: { select: { id: true, name: true, email: true } },
-      assignee: { select: { id: true, name: true, email: true } },
-    },
-    orderBy: { createdAt: 'desc' },
-  })
+  const select = '*,creator:User!Ticket_creatorId_fkey(id,name,email),assignee:User!Ticket_assigneeId_fkey(id,name,email)'
+  const tickets = await findTickets({
+    select,
+    where: whereParts.join('&'),
+    order: 'createdAt.desc',
+  }) as unknown as TicketListItem[]
 
   const statusLabels: Record<string, string> = {
     OPEN: 'Abierto',

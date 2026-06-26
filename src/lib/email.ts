@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer'
-import { prisma } from './prisma'
+import { findEmailConfig } from './db'
 
 interface EmailOptions {
   to: string
@@ -8,32 +8,17 @@ interface EmailOptions {
 }
 
 async function getTransporter() {
-  const config = await prisma.emailConfig.findFirst({
-    where: { enabled: true },
-    orderBy: { updatedAt: 'desc' },
-  })
+  const config = await findEmailConfig()
 
-  if (!config) return null
-
-  if (config.provider === 'google' || config.provider === 'office') {
-    return nodemailer.createTransport({
-      host: config.host,
-      port: config.port,
-      secure: config.port === 465,
-      auth: {
-        user: config.user,
-        pass: config.password,
-      },
-    })
-  }
+  if (!config || !config.enabled) return null
 
   return nodemailer.createTransport({
-    host: config.host,
-    port: config.port,
-    secure: config.port === 465,
+    host: config.host as string,
+    port: config.port as number,
+    secure: (config.port as number) === 465,
     auth: {
-      user: config.user,
-      pass: config.password,
+      user: config.user as string,
+      pass: config.password as string,
     },
   })
 }
@@ -43,13 +28,10 @@ export async function sendEmail(options: EmailOptions): Promise<boolean> {
     const transporter = await getTransporter()
     if (!transporter) return false
 
-    const config = await prisma.emailConfig.findFirst({
-      where: { enabled: true },
-      orderBy: { updatedAt: 'desc' },
-    })
+    const config = await findEmailConfig()
 
     await transporter.sendMail({
-      from: config?.from || options.to,
+      from: (config?.from as string) || options.to,
       to: options.to,
       subject: options.subject,
       html: options.html,
