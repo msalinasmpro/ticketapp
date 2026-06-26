@@ -100,12 +100,12 @@ export async function findTickets(opts: {
 }
 
 export async function findTicketById(id: string): Promise<DbTicket | null> {
-  const rows = await rest<DbTicket[]>(`/rest/v1/Ticket?select=*,creator:User!Ticket_creatorId_fkey(id,name,email),assignee:User!Ticket_assigneeId_fkey(id,name,email)&id=eq.${encodeURIComponent(id)}&limit=1`)
+  const rows = await rest<DbTicket[]>(`/rest/v1/Ticket?select=id,title,description,status,priority,phone,company,attachmentUrl,creatorId,assigneeId,createdAt,updatedAt,creator:User!Ticket_creatorId_fkey(id,name,email),assignee:User!Ticket_assigneeId_fkey(id,name,email)&id=eq.${encodeURIComponent(id)}&limit=1`)
   return rows[0] || null
 }
 
 export async function updateTicket(id: string, data: Record<string, unknown>): Promise<DbTicket> {
-  const rows = await rest<DbTicket[]>(`/rest/v1/Ticket?select=*,creator:User!Ticket_creatorId_fkey(id,name,email),assignee:User!Ticket_assigneeId_fkey(id,name,email)&id=eq.${encodeURIComponent(id)}`, {
+  const rows = await rest<DbTicket[]>(`/rest/v1/Ticket?select=id,title,description,status,priority,phone,company,attachmentUrl,creatorId,assigneeId,createdAt,updatedAt,creator:User!Ticket_creatorId_fkey(id,name,email),assignee:User!Ticket_assigneeId_fkey(id,name,email)&id=eq.${encodeURIComponent(id)}`, {
     method: 'PATCH',
     headers: { ...headers, Prefer: 'return=representation' },
     body: JSON.stringify({ ...data, updatedAt: new Date().toISOString() }),
@@ -122,13 +122,10 @@ export async function deleteTicket(id: string): Promise<void> {
 export async function createTicket(data: Record<string, unknown>): Promise<DbTicket> {
   const now = new Date().toISOString()
 
-  const maxResult = await rest<{ ticketNumber: number }[]>(`/rest/v1/Ticket?select=ticketNumber&order=ticketNumber.desc&limit=1`)
-  const nextNumber = (maxResult[0]?.ticketNumber || 0) + 1
-
-  const rows = await rest<DbTicket[]>(`/rest/v1/Ticket?select=*`, {
+  const rows = await rest<DbTicket[]>(`/rest/v1/Ticket?select=id,title,description,status,priority,phone,company,attachmentUrl,creatorId,assigneeId,createdAt,updatedAt`, {
     method: 'POST',
     headers: { ...headers, Prefer: 'return=representation' },
-    body: JSON.stringify({ id: crypto.randomUUID(), ...data, ticketNumber: nextNumber, createdAt: now, updatedAt: now }),
+    body: JSON.stringify({ id: crypto.randomUUID(), ...data, createdAt: now, updatedAt: now }),
   })
   return rows[0]
 }

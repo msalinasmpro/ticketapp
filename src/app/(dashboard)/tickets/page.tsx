@@ -6,7 +6,6 @@ import Link from 'next/link'
 
 interface TicketListItem {
   id: string
-  ticketNumber: number
   title: string
   status: string
   priority: string
@@ -33,7 +32,7 @@ export default async function TicketsPage({
   if (status) whereParts.push(`status=eq.${status}`)
   if (priority) whereParts.push(`priority=eq.${priority}`)
 
-  const select = '*,creator:User!Ticket_creatorId_fkey(id,name,email),assignee:User!Ticket_assigneeId_fkey(id,name,email)'
+  const select = 'id,title,status,priority,createdAt,creator:User!Ticket_creatorId_fkey(id,name,email),assignee:User!Ticket_assigneeId_fkey(id,name,email)'
   const tickets = await findTickets({
     select,
     where: whereParts.join('&'),
@@ -127,12 +126,12 @@ export default async function TicketsPage({
                   </td>
                 </tr>
               ) : (
-                tickets.map((ticket) => (
+                tickets.map((ticket, idx) => (
                   <tr key={ticket.id} className="hover:bg-surface-hover transition-colors duration-150">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <Link href={`/tickets/${ticket.id}`} className="text-sm font-medium text-foreground hover:text-accent transition-colors duration-200">
                         <Link href={`/tickets/${ticket.id}`} className="text-sm font-medium text-foreground hover:text-accent transition-colors duration-200">
-                          <span className="text-muted mr-1.5">#{ticket.ticketNumber}</span>
+                          <span className="text-muted mr-1.5">#{idx + 1}</span>
                           {ticket.title}
                         </Link>
                       </Link>
