@@ -29,3 +29,25 @@ export async function PUT(req: Request) {
 
   return NextResponse.json({ success: true })
 }
+
+export async function POST(req: Request) {
+  const session = await getServerSession(authOptions)
+  if (!session || session.user.role !== 'admin') {
+    return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
+  }
+
+  const { userId, newPassword } = await req.json()
+
+  if (!userId || !newPassword || newPassword.length < 6) {
+    return NextResponse.json({ error: 'Datos inválidos. La contraseña debe tener al menos 6 caracteres' }, { status: 400 })
+  }
+
+  const hashed = await hash(newPassword, 12)
+  await fetch(`${SUPABASE_URL}/rest/v1/User?id=eq.${encodeURIComponent(userId)}`, {
+    method: 'PATCH',
+    headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', Prefer: 'return=representation' },
+    body: JSON.stringify({ password: hashed, updatedAt: new Date().toISOString() }),
+  })
+
+  return NextResponse.json({ success: true })
+}
