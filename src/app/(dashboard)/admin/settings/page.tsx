@@ -271,7 +271,7 @@ export default function EmailSettingsPage() {
                 }`}
               >
                 <span
-                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-200 ${
+                  className={`inline-block h-4 w-4 transform rounded-full bg-background transition-transform duration-200 ${
                     config.enabled ? 'translate-x-6' : 'translate-x-1'
                   }`}
                 />

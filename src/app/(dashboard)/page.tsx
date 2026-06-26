@@ -128,7 +128,7 @@ export default async function DashboardPage({
         </div>
         <Link
           href="/tickets/new"
-          className="inline-flex items-center gap-2 rounded-[6px] bg-accent px-4 py-2 text-[13px] font-medium text-black hover:bg-accent-hover transition-colors duration-150 shrink-0"
+          className="inline-flex items-center gap-2 rounded-[6px] bg-accent px-4 py-2 text-[13px] font-medium text-background hover:bg-accent-hover transition-colors duration-150 shrink-0"
         >
           <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
             <line x1="12" y1="5" x2="12" y2="19" />
@@ -263,7 +263,7 @@ export default async function DashboardPage({
                       {!q && (
                         <Link
                           href="/tickets/new"
-                          className="inline-flex items-center gap-2 rounded-[6px] bg-accent px-4 py-2 text-[13px] font-medium text-black hover:bg-accent-hover transition-colors duration-[120ms]"
+                          className="inline-flex items-center gap-2 rounded-[6px] bg-accent px-4 py-2 text-[13px] font-medium text-background hover:bg-accent-hover transition-colors duration-[120ms]"
                         >
                           <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                             <line x1="12" y1="5" x2="12" y2="19" />

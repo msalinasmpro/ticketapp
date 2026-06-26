@@ -14,14 +14,21 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const saved = localStorage.getItem('theme') as Theme | null
-    if (saved) setTheme(saved)
-    else if (window.matchMedia('(prefers-color-scheme: light)').matches) setTheme('light')
+    if (saved) {
+      setTheme(saved)
+    } else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+      setTheme('light')
+    } else {
+      setTheme('dark')
+    }
     setMounted(true)
   }, [])
 
   useEffect(() => {
     if (!mounted) return
-    document.documentElement.classList.toggle('light', theme === 'light')
+    const root = document.documentElement
+    root.classList.remove('dark', 'light')
+    root.classList.add(theme)
     localStorage.setItem('theme', theme)
   }, [theme, mounted])
 

@@ -110,7 +110,7 @@ export default function ChangePasswordPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-md bg-accent px-4 py-2.5 text-sm font-medium text-black hover:bg-accent-hover focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 disabled:opacity-50 transition-all"
+            className="w-full rounded-md bg-accent px-4 py-2.5 text-sm font-medium text-background hover:bg-accent-hover focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 disabled:opacity-50 transition-all"
           >
             {loading ? 'Guardando...' : 'Cambiar Contraseña'}
           </button>

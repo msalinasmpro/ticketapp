@@ -197,7 +197,7 @@ export default function AdminUsersPage() {
       )}
 
       {resetPasswordUser && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60" onClick={() => setResetPasswordUser(null)}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/60" onClick={() => setResetPasswordUser(null)}>
           <div className="w-full max-w-md rounded-xl bg-surface border border-border p-6 shadow-xl" onClick={e => e.stopPropagation()}>
             <h3 className="text-lg font-semibold text-foreground mb-1">Cambiar contraseña</h3>
             <p className="text-sm text-muted mb-4">Para: <span className="text-foreground font-medium">{resetPasswordUser.email}</span></p>
