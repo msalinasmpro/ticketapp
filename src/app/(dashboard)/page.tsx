@@ -5,6 +5,7 @@ import { countTickets, findTickets, getTicketStatsByPeriod, SUPABASE_URL, SUPABA
 import Link from 'next/link'
 import { TicketSearch } from '@/components/dashboard/ticket-search'
 import { BarChart } from '@/components/charts/bar-chart'
+import { TicketTable } from '@/components/dashboard/ticket-table'
 
 interface DashboardTicket {
   id: string
@@ -227,165 +228,14 @@ export default async function DashboardPage({
           <h2 className="text-[13px] font-semibold text-foreground uppercase tracking-[0.08em]">Tickets Recientes</h2>
           <TicketSearch defaultValue={q} />
         </div>
-        <div className="overflow-x-auto">
-          <table className="min-w-full">
-            <thead>
-              <tr className="border-b border-border">
-                <th className="px-6 py-2 text-left text-[11px] font-medium text-muted uppercase tracking-[0.08em]">
-                  Nº / Ticket
-                </th>
-                <th className="px-6 py-2 text-left text-[11px] font-medium text-muted uppercase tracking-[0.08em] hidden sm:table-cell">
-                  Empresa
-                </th>
-                <th className="px-6 py-2 text-left text-[11px] font-medium text-muted uppercase tracking-[0.08em]">
-                  Estado
-                </th>
-                <th className="px-6 py-2 text-left text-[11px] font-medium text-muted uppercase tracking-[0.08em]">
-                  Prioridad
-                </th>
-                {isAdmin && (
-                  <th className="px-6 py-2 text-left text-[11px] font-medium text-muted uppercase tracking-[0.08em] hidden md:table-cell">
-                    Cliente
-                  </th>
-                )}
-                {isAdmin && (
-                  <th className="px-6 py-2 text-left text-[11px] font-medium text-muted uppercase tracking-[0.08em] hidden md:table-cell">
-                    Reportar a
-                  </th>
-                )}
-                {isAdmin && (
-                  <th className="px-6 py-2 text-left text-[11px] font-medium text-muted uppercase tracking-[0.08em] hidden md:table-cell">
-                    Asignado
-                  </th>
-                )}
-                <th className="px-6 py-2 text-left text-[11px] font-medium text-muted uppercase tracking-[0.08em]">
-                  <span className="sr-only">Acciones</span>
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border">
-              {recentTickets.length === 0 ? (
-                <tr>
-                  <td colSpan={6} className="px-6 py-16 text-center">
-                    <div className="flex flex-col items-center">
-                      <svg className="h-6 w-6 text-muted mb-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                      </svg>
-                      <p className="text-[13px] font-medium text-foreground mb-1">{q ? 'No se encontraron resultados' : 'No hay tickets aún'}</p>
-                      <p className="text-[11px] text-muted mb-4">{q ? 'Intenta con otro término de búsqueda' : 'Crea tu primer ticket para comenzar'}</p>
-                      {!q && (
-                        <Link
-                          href="/tickets/new"
-                          className="inline-flex items-center gap-2 rounded-[6px] bg-accent px-4 py-2 text-[13px] font-medium text-background hover:bg-accent-hover transition-colors duration-[120ms]"
-                        >
-                          <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                            <line x1="12" y1="5" x2="12" y2="19" />
-                            <line x1="5" y1="12" x2="19" y2="12" />
-                          </svg>
-                          Crear primer ticket
-                        </Link>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              ) : (
-                recentTickets.map((ticket, idx) => (
-                  <tr key={ticket.id} className={`hover:bg-surface-hover transition-colors duration-[120ms] group ${idx % 2 === 1 ? 'bg-surface-hover/30' : ''}`}>
-                    <td className="px-6 py-2">
-                      <div>
-                        <Link href={`/tickets/${ticket.id}`} className="text-[13px] font-medium text-foreground hover:text-link transition-colors duration-[120ms]">
-                          <span className="text-muted mr-1.5">#{ticket.ticketNumber}</span>
-                          {ticket.title}
-                        </Link>
-                        <div className="flex items-center gap-2 mt-0.5 text-[11px] text-muted">
-                          <span>{ticket.creator.name}</span>
-                          <span>·</span>
-                          <span>{new Date(ticket.createdAt).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })}</span>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-2 hidden sm:table-cell">
-                      <span className="text-[13px] text-muted">{ticket.company || '-'}</span>
-                    </td>
-                    <td className="px-6 py-2">
-                      <span className="inline-flex items-center gap-1.5 text-[11px] font-medium text-muted">
-                        <span className={`h-1 w-1 rounded-full ${statusDotColors[ticket.status]}`} />
-                        {statusLabels[ticket.status] || ticket.status}
-                      </span>
-                    </td>
-                    <td className="px-6 py-2">
-                      <span className="inline-flex items-center gap-1.5 text-[11px] font-medium text-muted">
-                        <span className={`h-1 w-1 rounded-full ${priorityDotColors[ticket.priority]}`} />
-                        {priorityLabels[ticket.priority] || ticket.priority}
-                      </span>
-                    </td>
-                    {isAdmin && (
-                      <td className="px-6 py-2 hidden md:table-cell">
-                        <span className="text-[13px] text-muted">{ticket.clientName || '-'}</span>
-                      </td>
-                    )}
-                    {isAdmin && (
-                      <td className="px-6 py-2 hidden md:table-cell">
-                        <span className="text-[13px] text-muted">{ticket.reportTo || '-'}</span>
-                      </td>
-                    )}
-                    {isAdmin && (
-                      <td className="px-6 py-2 hidden md:table-cell">
-                        {ticket.assignee?.name ? (
-                          <div className="flex items-center gap-2">
-                            <span className="h-5 w-5 rounded-full bg-surface-hover text-muted flex items-center justify-center text-[10px] font-semibold shrink-0">
-                              {getInitials(ticket.assignee.name)}
-                            </span>
-                            <span className="text-[13px] text-muted">{ticket.assignee.name}</span>
-                          </div>
-                        ) : (
-                          <span className="text-[11px] text-muted">Sin asignar</span>
-                        )}
-                      </td>
-                    )}
-                    <td className="px-6 py-2">
-                      <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-120">
-                        <Link
-                          href={`/tickets/${ticket.id}`}
-                          className="rounded-[3px] p-1 text-muted hover:text-foreground hover:bg-surface-hover transition-colors duration-[120ms]"
-                          title="Ver detalle"
-                        >
-                          <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                            <circle cx="12" cy="12" r="3" />
-                          </svg>
-                        </Link>
-                        <Link
-                          href={`/tickets/${ticket.id}`}
-                          className="rounded-[3px] p-1 text-muted hover:text-link hover:bg-link/10 transition-colors duration-[120ms]"
-                          title="Editar"
-                        >
-                          <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
-                            <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
-                          </svg>
-                        </Link>
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+        <TicketTable tickets={recentTickets} isAdmin={isAdmin} />
         {recentTickets.length > 0 && (
           <div className="px-6 py-3 border-t border-border flex items-center justify-between">
             <p className="text-[11px] text-muted">
               Mostrando {recentTickets.length} de {total} tickets
             </p>
-            <Link
-              href="/tickets"
-              className="inline-flex items-center gap-1.5 text-[13px] font-medium text-link hover:text-link transition-colors"
-            >
-              Ver todos los tickets
-              <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M5 12h14M12 5l7 7-7 7" />
-              </svg>
+            <Link href="/tickets" className="text-[13px] font-medium text-link hover:text-link transition-colors">
+              Ver todos los tickets →
             </Link>
           </div>
         )}

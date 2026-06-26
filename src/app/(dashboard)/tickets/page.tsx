@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { findTickets } from '@/lib/db'
 import Link from 'next/link'
+import { TicketTable } from '@/components/dashboard/ticket-table'
 
 interface TicketListItem {
   id: string
@@ -42,20 +43,6 @@ export default async function TicketsPage({
     order: 'createdAt.desc',
   }) as unknown as TicketListItem[]
 
-  const statusLabels: Record<string, string> = {
-    OPEN: 'Abierto',
-    IN_PROGRESS: 'En Progreso',
-    RESOLVED: 'Resuelto',
-    CLOSED: 'Cerrado',
-  }
-
-  const priorityLabels: Record<string, string> = {
-    LOW: 'Baja',
-    MEDIUM: 'Media',
-    HIGH: 'Alta',
-    CRITICAL: 'Crítica',
-  }
-
   return (
     <div>
       <div className="flex items-center justify-between mb-8">
@@ -84,120 +71,7 @@ export default async function TicketsPage({
       </div>
 
       <div className="rounded-xl bg-surface border border-border overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="min-w-full">
-            <thead>
-              <tr className="border-b border-border">
-                <th className="px-6 py-3.5 text-left text-xs font-medium text-light uppercase tracking-wider">
-                  Nº / Título
-                </th>
-                <th className="px-6 py-3.5 text-left text-xs font-medium text-light uppercase tracking-wider">
-                  Estado
-                </th>
-                <th className="px-6 py-3.5 text-left text-xs font-medium text-light uppercase tracking-wider">
-                  Prioridad
-                </th>
-                <th className="px-6 py-3.5 text-left text-xs font-medium text-light uppercase tracking-wider">
-                  Creador
-                </th>
-                {isAdmin && (
-                  <th className="px-6 py-3.5 text-left text-xs font-medium text-light uppercase tracking-wider">
-                    Cliente
-                  </th>
-                )}
-                {isAdmin && (
-                  <th className="px-6 py-3.5 text-left text-xs font-medium text-light uppercase tracking-wider">
-                    Reportar a
-                  </th>
-                )}
-                {isAdmin && (
-                  <th className="px-6 py-3.5 text-left text-xs font-medium text-light uppercase tracking-wider">
-                    Asignado
-                  </th>
-                )}
-                <th className="px-6 py-3.5 text-left text-xs font-medium text-light uppercase tracking-wider">
-                  Fecha
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border">
-              {tickets.length === 0 ? (
-                <tr>
-                  <td colSpan={6} className="px-6 py-16 text-center">
-                    <div className="flex flex-col items-center">
-                      <svg className="h-12 w-12 text-border mb-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                        <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                      <p className="text-sm text-light mb-4">No hay tickets</p>
-                      <Link
-                        href="/tickets/new"
-                        className="inline-flex items-center gap-2 rounded-md bg-accent px-4 py-2 text-sm font-medium text-background hover:bg-accent-hover transition-colors duration-200"
-                      >
-                        Crear primer ticket
-                      </Link>
-                    </div>
-                  </td>
-                </tr>
-              ) : (
-                tickets.map((ticket, idx) => (
-                  <tr key={ticket.id} className="hover:bg-surface-hover transition-colors duration-150">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <Link href={`/tickets/${ticket.id}`} className="text-sm font-medium text-foreground hover:text-accent transition-colors duration-200">
-                        <Link href={`/tickets/${ticket.id}`} className="text-sm font-medium text-foreground hover:text-accent transition-colors duration-200">
-                          <span className="text-muted mr-1.5">#{ticket.ticketNumber}</span>
-                          {ticket.title}
-                        </Link>
-                      </Link>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                        ticket.status === 'OPEN' ? 'bg-blue-light text-blue' :
-                        ticket.status === 'IN_PROGRESS' ? 'bg-yellow-light text-yellow' :
-                        ticket.status === 'RESOLVED' ? 'bg-green-light text-green' :
-                        'bg-gray-light text-gray-badge'
-                      }`}>
-                        {statusLabels[ticket.status] || ticket.status}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                        ticket.priority === 'CRITICAL' ? 'bg-red-light text-red' :
-                        ticket.priority === 'HIGH' ? 'bg-orange-light text-orange' :
-                        ticket.priority === 'MEDIUM' ? 'bg-blue-light text-blue' :
-                        'bg-gray-light text-gray-badge'
-                      }`}>
-                        {priorityLabels[ticket.priority] || ticket.priority}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-muted">
-                      {ticket.creator.name}
-                    </td>
-                    {isAdmin && (
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-muted">
-                        {ticket.clientName || '-'}
-                      </td>
-                    )}
-                    {isAdmin && (
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-muted">
-                        {ticket.reportTo || '-'}
-                      </td>
-                    )}
-                    {isAdmin && (
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-muted">
-                        {ticket.assignee?.name || (
-                          <span className="text-light">Sin asignar</span>
-                        )}
-                      </td>
-                    )}
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-light">
-                      {new Date(ticket.createdAt).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' })}
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+        <TicketTable tickets={tickets} isAdmin={isAdmin} />
       </div>
     </div>
   )
