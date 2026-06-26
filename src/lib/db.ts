@@ -179,6 +179,50 @@ export async function findEmailConfig(): Promise<Record<string, unknown> | null>
   return rows[0] || null
 }
 
+export async function getTicketStatsByPeriod(period: 'day' | 'week' | 'month', limit: number, isAdmin: boolean, userId?: string): Promise<{ label: string; value: number }[]> {
+  const now = new Date()
+  const results: { label: string; value: number }[] = []
+
+  for (let i = limit - 1; i >= 0; i--) {
+    const start = new Date(now)
+    const end = new Date(now)
+    let label = ''
+
+    if (period === 'day') {
+      start.setDate(now.getDate() - i)
+      start.setHours(0, 0, 0, 0)
+      end.setDate(now.getDate() - i)
+      end.setHours(23, 59, 59, 999)
+      label = start.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })
+    } else if (period === 'week') {
+      start.setDate(now.getDate() - (i * 7) - now.getDay())
+      start.setHours(0, 0, 0, 0)
+      end.setDate(start.getDate() + 6)
+      end.setHours(23, 59, 59, 999)
+      label = `S${limit - i}`
+    } else {
+      start.setMonth(now.getMonth() - i, 1)
+      start.setHours(0, 0, 0, 0)
+      end.setMonth(now.getMonth() - i + 1, 0)
+      end.setHours(23, 59, 59, 999)
+      label = start.toLocaleDateString('es-ES', { month: 'short' })
+    }
+
+    const startISO = start.toISOString()
+    const endISO = end.toISOString()
+
+    let where = `createdAt=gte.${startISO}&createdAt=lte.${endISO}`
+    if (!isAdmin && userId) where += `&creatorId=eq.${userId}`
+
+    const rows = await rest<{ count: number }[]>(`/rest/v1/Ticket?select=count&${where}`, {
+      headers: { ...headers, Prefer: 'count=exact' },
+    })
+    results.push({ label, value: rows[0]?.count ?? 0 })
+  }
+
+  return results
+}
+
 export async function upsertEmailConfig(data: Record<string, unknown>): Promise<void> {
   const existing = await findEmailConfig()
   if (existing) {

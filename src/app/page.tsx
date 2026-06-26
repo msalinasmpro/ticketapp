@@ -1,11 +1,12 @@
 import { redirect } from 'next/navigation'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
-import { countTickets, findTickets, SUPABASE_URL, SUPABASE_KEY } from '@/lib/db'
+import { countTickets, findTickets, getTicketStatsByPeriod, SUPABASE_URL, SUPABASE_KEY } from '@/lib/db'
 import Link from 'next/link'
 import { DashboardActions } from '@/components/dashboard/dashboard-actions'
 import { TicketSearch } from '@/components/dashboard/ticket-search'
 import { NotificationBell } from '@/components/notifications/notification-bell'
+import { BarChart } from '@/components/charts/bar-chart'
 
 interface DashboardTicket {
   id: string
@@ -58,6 +59,12 @@ export default async function DashboardPage({
     const ticketWhere = !isAdmin ? `creatorId=eq.${userId}` : undefined
     recentTickets = await findTickets({ select, where: ticketWhere, order: 'createdAt.desc', limit: 10 }) as unknown as DashboardTicket[]
   }
+
+  const [dailyData, weeklyData, monthlyData] = await Promise.all([
+    getTicketStatsByPeriod('day', 7, isAdmin, isAdmin ? undefined : userId),
+    getTicketStatsByPeriod('week', 4, isAdmin, isAdmin ? undefined : userId),
+    getTicketStatsByPeriod('month', 6, isAdmin, isAdmin ? undefined : userId),
+  ])
 
   const stats = [
     { name: 'Total', value: total, dotColor: 'bg-accent' },
@@ -188,6 +195,21 @@ export default async function DashboardPage({
             <p className="text-[24px] font-semibold text-foreground tabular-nums leading-none">{stat.value}</p>
           </div>
         ))}
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        <div className="rounded-[6px] bg-surface border border-border p-4">
+          <p className="text-[11px] font-medium text-muted uppercase tracking-[0.08em] mb-3">Últimos 7 días</p>
+          <BarChart data={dailyData} color="#3ecf8e" height={100} />
+        </div>
+        <div className="rounded-[6px] bg-surface border border-border p-4">
+          <p className="text-[11px] font-medium text-muted uppercase tracking-[0.08em] mb-3">Últimas 4 semanas</p>
+          <BarChart data={weeklyData} color="#3b82f6" height={100} />
+        </div>
+        <div className="rounded-[6px] bg-surface border border-border p-4">
+          <p className="text-[11px] font-medium text-muted uppercase tracking-[0.08em] mb-3">Últimos 6 meses</p>
+          <BarChart data={monthlyData} color="#f59e0b" height={100} />
+        </div>
       </div>
 
       <div className="mx-auto max-w-4xl rounded-[6px] bg-surface border border-border overflow-hidden">
