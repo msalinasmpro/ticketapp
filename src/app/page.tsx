@@ -3,9 +3,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { countTickets, findTickets, getTicketStatsByPeriod, SUPABASE_URL, SUPABASE_KEY } from '@/lib/db'
 import Link from 'next/link'
-import { DashboardActions } from '@/components/dashboard/dashboard-actions'
 import { TicketSearch } from '@/components/dashboard/ticket-search'
-import { NotificationBell } from '@/components/notifications/notification-bell'
 import { BarChart } from '@/components/charts/bar-chart'
 
 interface DashboardTicket {
@@ -106,29 +104,38 @@ export default async function DashboardPage({
 
   return (
     <div>
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
-        <div>
-          <h1 className="text-3xl font-semibold tracking-tight text-foreground">
-            Hola, {session.user?.name}
-          </h1>
-          <p className="mt-1 text-sm text-light">
-            Aquí tienes un resumen de tu actividad reciente.
+      <div className="flex items-center gap-4 mb-8 rounded-[6px] bg-surface border border-border p-5">
+        <div className="h-12 w-12 rounded-full bg-[#3ecf8e]/10 text-[#3ecf8e] flex items-center justify-center text-lg font-semibold shrink-0">
+          {getInitials(session.user?.name || 'U')}
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2">
+            <h1 className="text-[18px] font-semibold text-foreground tracking-tight">
+              Hola, {session.user?.name}
+            </h1>
+            {isAdmin && (
+              <span className="inline-flex items-center rounded-full bg-[#3ecf8e]/10 px-2 py-0.5 text-[11px] font-medium text-[#3ecf8e]">
+                Admin
+              </span>
+            )}
+          </div>
+          <p className="text-[13px] text-muted mt-0.5">
+            {isAdmin
+              ? `Tienes ${total} ticket${total !== 1 ? 's' : ''} en el sistema. ${open > 0 ? `${open} abiert${open !== 1 ? 'os' : 'o'}.` : 'Todo al día.'}`
+              : `Tienes ${total} ticket${total !== 1 ? 's' : ''}. ${open > 0 ? `${open} abiert${open !== 1 ? 'os' : 'o'}.` : 'Todo al día.'}`
+            }
           </p>
         </div>
-        <div className="flex items-center gap-3">
-          <Link
-            href="/tickets/new"
-            className="inline-flex items-center gap-2 rounded-[6px] bg-accent px-5 py-2 text-[13px] font-medium text-black hover:bg-accent-hover transition-colors duration-[120ms]"
-          >
-            <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="12" y1="5" x2="12" y2="19" />
-              <line x1="5" y1="12" x2="19" y2="12" />
-            </svg>
-            Nuevo Ticket
-          </Link>
-          {isAdmin && <NotificationBell />}
-          <DashboardActions />
-        </div>
+        <Link
+          href="/tickets/new"
+          className="inline-flex items-center gap-2 rounded-[6px] bg-accent px-4 py-2 text-[13px] font-medium text-black hover:bg-accent-hover transition-colors duration-150 shrink-0"
+        >
+          <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
+          Nuevo Ticket
+        </Link>
       </div>
 
       {isAdmin && (
