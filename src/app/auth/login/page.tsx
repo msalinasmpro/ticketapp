@@ -43,10 +43,10 @@ export default function LoginPage() {
             </svg>
           </div>
           <h1 className="text-2xl font-semibold tracking-tight text-foreground">
-            Bienvenido de vuelta
+            Bienvenido al sistema de soporte TECNODIOR/ISINET
           </h1>
           <p className="mt-1.5 text-sm text-light">
-            Inicia sesión para continuar
+            Inicia sesión o regístrate para acceder al portal
           </p>
         </div>
 
