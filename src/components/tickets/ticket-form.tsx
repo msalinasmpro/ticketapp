@@ -250,7 +250,7 @@ export function TicketForm({ initialData, onSubmit }: TicketFormProps) {
               </svg>
               Guardando...
             </span>
-          ) : 'Crear Ticket'}
+          ) : initialData ? 'Guardar Ticket' : 'Crear Ticket'}
         </button>
       </div>
     </form>
