@@ -233,9 +233,11 @@ export default async function DashboardPage({
                 <th className="px-6 py-2 text-left text-[11px] font-medium text-muted uppercase tracking-[0.08em]">
                   Prioridad
                 </th>
-                <th className="px-6 py-2 text-left text-[11px] font-medium text-muted uppercase tracking-[0.08em] hidden md:table-cell">
-                  Asignado
-                </th>
+                {isAdmin && (
+                  <th className="px-6 py-2 text-left text-[11px] font-medium text-muted uppercase tracking-[0.08em] hidden md:table-cell">
+                    Asignado
+                  </th>
+                )}
                 <th className="px-6 py-2 text-left text-[11px] font-medium text-muted uppercase tracking-[0.08em]">
                   <span className="sr-only">Acciones</span>
                 </th>
@@ -296,18 +298,20 @@ export default async function DashboardPage({
                         {priorityLabels[ticket.priority] || ticket.priority}
                       </span>
                     </td>
-                    <td className="px-6 py-2 hidden md:table-cell">
-                      {ticket.assignee?.name ? (
-                        <div className="flex items-center gap-2">
-                          <span className="h-5 w-5 rounded-full bg-surface-hover text-muted flex items-center justify-center text-[10px] font-semibold shrink-0">
-                            {getInitials(ticket.assignee.name)}
-                          </span>
-                          <span className="text-[13px] text-muted">{ticket.assignee.name}</span>
-                        </div>
-                      ) : (
-                        <span className="text-[11px] text-muted">Sin asignar</span>
-                      )}
-                    </td>
+                    {isAdmin && (
+                      <td className="px-6 py-2 hidden md:table-cell">
+                        {ticket.assignee?.name ? (
+                          <div className="flex items-center gap-2">
+                            <span className="h-5 w-5 rounded-full bg-surface-hover text-muted flex items-center justify-center text-[10px] font-semibold shrink-0">
+                              {getInitials(ticket.assignee.name)}
+                            </span>
+                            <span className="text-[13px] text-muted">{ticket.assignee.name}</span>
+                          </div>
+                        ) : (
+                          <span className="text-[11px] text-muted">Sin asignar</span>
+                        )}
+                      </td>
+                    )}
                     <td className="px-6 py-2">
                       <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-120">
                         <Link

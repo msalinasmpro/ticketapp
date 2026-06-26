@@ -93,9 +93,11 @@ export default async function TicketsPage({
                 <th className="px-6 py-3.5 text-left text-xs font-medium text-light uppercase tracking-wider">
                   Creador
                 </th>
-                <th className="px-6 py-3.5 text-left text-xs font-medium text-light uppercase tracking-wider">
-                  Asignado
-                </th>
+                {isAdmin && (
+                  <th className="px-6 py-3.5 text-left text-xs font-medium text-light uppercase tracking-wider">
+                    Asignado
+                  </th>
+                )}
                 <th className="px-6 py-3.5 text-left text-xs font-medium text-light uppercase tracking-wider">
                   Fecha
                 </th>
@@ -150,11 +152,13 @@ export default async function TicketsPage({
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-muted">
                       {ticket.creator.name}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-muted">
-                      {ticket.assignee?.name || (
-                        <span className="text-light">Sin asignar</span>
-                      )}
-                    </td>
+                    {isAdmin && (
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-muted">
+                        {ticket.assignee?.name || (
+                          <span className="text-light">Sin asignar</span>
+                        )}
+                      </td>
+                    )}
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-light">
                       {new Date(ticket.createdAt).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' })}
                     </td>
