@@ -6,6 +6,7 @@ import Link from 'next/link'
 
 interface TicketListItem {
   id: string
+  ticketNumber: number
   title: string
   status: string
   priority: string
@@ -86,7 +87,7 @@ export default async function TicketsPage({
             <thead>
               <tr className="border-b border-border">
                 <th className="px-6 py-3.5 text-left text-xs font-medium text-light uppercase tracking-wider">
-                  Título
+                  Nº / Título
                 </th>
                 <th className="px-6 py-3.5 text-left text-xs font-medium text-light uppercase tracking-wider">
                   Estado
@@ -130,7 +131,10 @@ export default async function TicketsPage({
                   <tr key={ticket.id} className="hover:bg-surface-hover transition-colors duration-150">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <Link href={`/tickets/${ticket.id}`} className="text-sm font-medium text-foreground hover:text-accent transition-colors duration-200">
-                        {ticket.title}
+                        <Link href={`/tickets/${ticket.id}`} className="text-sm font-medium text-foreground hover:text-accent transition-colors duration-200">
+                          <span className="text-muted mr-1.5">#{ticket.ticketNumber}</span>
+                          {ticket.title}
+                        </Link>
                       </Link>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">

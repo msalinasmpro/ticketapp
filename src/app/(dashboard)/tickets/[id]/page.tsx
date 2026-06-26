@@ -7,6 +7,7 @@ import { TicketForm } from '@/components/tickets/ticket-form'
 
 interface Ticket {
   id: string
+  ticketNumber: number
   title: string
   description: string
   status: string
@@ -142,6 +143,7 @@ export default function TicketDetailPage({ params }: { params: Promise<{ id: str
             Tickets
           </Link>
           <h1 className="text-3xl font-semibold tracking-tight text-foreground">
+            <span className="text-muted text-2xl mr-2">#{ticket.ticketNumber}</span>
             {ticket.title}
           </h1>
         </div>

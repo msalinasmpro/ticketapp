@@ -8,6 +8,7 @@ import { BarChart } from '@/components/charts/bar-chart'
 
 interface DashboardTicket {
   id: string
+  ticketNumber: number
   title: string
   status: string
   priority: string
@@ -44,7 +45,7 @@ export default async function DashboardPage({
     countTickets(countWhere ? `${countWhere}&status=eq.CLOSED` : 'status=eq.CLOSED'),
   ])
 
-  const select = 'id,title,status,priority,company,phone,createdAt,creator:User!Ticket_creatorId_fkey(name),assignee:User!Ticket_assigneeId_fkey(name)'
+  const select = 'id,ticketNumber,title,status,priority,company,phone,createdAt,creator:User!Ticket_creatorId_fkey(name),assignee:User!Ticket_assigneeId_fkey(name)'
 
   let recentTickets: DashboardTicket[]
   if (q) {
@@ -229,7 +230,7 @@ export default async function DashboardPage({
             <thead>
               <tr className="border-b border-border">
                 <th className="px-6 py-2 text-left text-[11px] font-medium text-muted uppercase tracking-[0.08em]">
-                  Ticket
+                  Nº / Ticket
                 </th>
                 <th className="px-6 py-2 text-left text-[11px] font-medium text-muted uppercase tracking-[0.08em] hidden sm:table-cell">
                   Empresa
@@ -281,6 +282,7 @@ export default async function DashboardPage({
                     <td className="px-6 py-2">
                       <div>
                         <Link href={`/tickets/${ticket.id}`} className="text-[13px] font-medium text-foreground hover:text-link transition-colors duration-[120ms]">
+                          <span className="text-muted mr-1.5">#{ticket.ticketNumber}</span>
                           {ticket.title}
                         </Link>
                         <div className="flex items-center gap-2 mt-0.5 text-[11px] text-muted">

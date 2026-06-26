@@ -19,6 +19,7 @@ export interface DbUser {
 
 export interface DbTicket {
   id: string
+  ticketNumber: number
   title: string
   description: string
   status: string
@@ -120,10 +121,14 @@ export async function deleteTicket(id: string): Promise<void> {
 
 export async function createTicket(data: Record<string, unknown>): Promise<DbTicket> {
   const now = new Date().toISOString()
+
+  const maxResult = await rest<{ ticketNumber: number }[]>(`/rest/v1/Ticket?select=ticketNumber&order=ticketNumber.desc&limit=1`)
+  const nextNumber = (maxResult[0]?.ticketNumber || 0) + 1
+
   const rows = await rest<DbTicket[]>(`/rest/v1/Ticket?select=*`, {
     method: 'POST',
     headers: { ...headers, Prefer: 'return=representation' },
-    body: JSON.stringify({ id: crypto.randomUUID(), ...data, createdAt: now, updatedAt: now }),
+    body: JSON.stringify({ id: crypto.randomUUID(), ...data, ticketNumber: nextNumber, createdAt: now, updatedAt: now }),
   })
   return rows[0]
 }
