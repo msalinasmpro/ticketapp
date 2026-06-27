@@ -13,11 +13,13 @@ export async function GET(req: Request) {
   const status = searchParams.get('status')
   const priority = searchParams.get('priority')
   const assigneeId = searchParams.get('assigneeId')
+  const role = session.user.role
 
   const whereParts: string[] = []
   if (status) whereParts.push(`status=eq.${status}`)
   if (priority) whereParts.push(`priority=eq.${priority}`)
   if (assigneeId) whereParts.push(`assigneeId=eq.${assigneeId}`)
+  if (role === 'user') whereParts.push(`creatorId=eq.${session.user.id}`)
 
   const select = '*,creator:User!Ticket_creatorId_fkey(id,name,email),assignee:User!Ticket_assigneeId_fkey(id,name,email)'
   const tickets = await findTickets({
@@ -38,7 +40,7 @@ export async function POST(req: Request) {
     const data = ticketSchema.parse(body)
 
     const ticketData: Record<string, unknown> = { ...data, creatorId: session.user.id }
-    if (session.user.role === 'admin' && !data.assigneeId) {
+    if ((session.user.role === 'admin' || session.user.role === 'tecnico') && !data.assigneeId) {
       ticketData.assigneeId = session.user.id
     }
     const ticket = await createTicket(ticketData)

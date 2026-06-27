@@ -21,6 +21,7 @@ interface TicketRow {
 interface TicketTableProps {
   tickets: TicketRow[]
   isAdmin: boolean
+  canSeeAll?: boolean
 }
 
 type SortKey = 'ticketNumber' | 'title' | 'company' | 'clientName' | 'status' | 'priority' | 'assignee' | 'createdAt'
@@ -47,7 +48,7 @@ function SortIcon({ active, dir }: { active: boolean; dir: SortDir }) {
   )
 }
 
-export function TicketTable({ tickets, isAdmin }: TicketTableProps) {
+export function TicketTable({ tickets, isAdmin, canSeeAll = isAdmin }: TicketTableProps) {
   const [sortKey, setSortKey] = useState<SortKey>('ticketNumber')
   const [sortDir, setSortDir] = useState<SortDir>('desc')
 
@@ -100,11 +101,11 @@ export function TicketTable({ tickets, isAdmin }: TicketTableProps) {
           <tr className="border-b border-border">
             <Header label="Nº / Ticket" sortId="ticketNumber" />
             <Header label="Empresa" sortId="company" className="hidden sm:table-cell" />
-            {isAdmin && <Header label="Cliente" sortId="clientName" className="hidden md:table-cell" />}
+            {canSeeAll && <Header label="Cliente" sortId="clientName" className="hidden md:table-cell" />}
             <Header label="Estado" sortId="status" />
             <Header label="Prioridad" sortId="priority" />
-            {isAdmin && <Header label="Reportar a" sortId="clientName" className="hidden lg:table-cell" />}
-            {isAdmin && <Header label="Asignado" sortId="assignee" className="hidden md:table-cell" />}
+            {canSeeAll && <Header label="Reportar a" sortId="clientName" className="hidden lg:table-cell" />}
+            {canSeeAll && <Header label="Asignado" sortId="assignee" className="hidden md:table-cell" />}
             <th className="px-6 py-2 text-left text-[11px] font-medium text-muted uppercase tracking-[0.08em]">
               <span className="sr-only">Acciones</span>
             </th>
@@ -141,7 +142,7 @@ export function TicketTable({ tickets, isAdmin }: TicketTableProps) {
                 <td className="px-6 py-2 hidden sm:table-cell">
                   <span className="text-[13px] text-muted">{ticket.company || '-'}</span>
                 </td>
-                {isAdmin && (
+                {canSeeAll && (
                   <td className="px-6 py-2 hidden md:table-cell">
                     <span className="text-[13px] text-muted">{ticket.clientName || '-'}</span>
                   </td>
@@ -158,12 +159,12 @@ export function TicketTable({ tickets, isAdmin }: TicketTableProps) {
                     {priorityLabels[ticket.priority] || ticket.priority}
                   </span>
                 </td>
-                {isAdmin && (
+                {canSeeAll && (
                   <td className="px-6 py-2 hidden lg:table-cell">
                     <span className="text-[13px] text-muted">{ticket.reportTo || '-'}</span>
                   </td>
                 )}
-                {isAdmin && (
+                {canSeeAll && (
                   <td className="px-6 py-2 hidden md:table-cell">
                     {ticket.assignee?.name ? (
                       <div className="flex items-center gap-2">

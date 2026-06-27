@@ -5,9 +5,7 @@ import { findUsers, updateUserRole, deleteUser } from '@/lib/db'
 
 export async function GET() {
   const session = await getServerSession(authOptions)
-  if (!session || session.user.role !== 'admin') {
-    return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
-  }
+  if (!session) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
 
   const users = await findUsers()
   return NextResponse.json(users)
@@ -20,7 +18,7 @@ export async function PUT(req: Request) {
   }
 
   const { id, role } = await req.json()
-  if (!id || !role || !['admin', 'user'].includes(role)) {
+  if (!id || !role || !['admin', 'tecnico', 'user'].includes(role)) {
     return NextResponse.json({ error: 'Datos inválidos' }, { status: 400 })
   }
 

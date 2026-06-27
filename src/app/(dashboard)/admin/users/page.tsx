@@ -37,15 +37,14 @@ export default function AdminUsersPage() {
       .catch(() => setLoading(false))
   }, [session, isAdmin, router])
 
-  async function toggleRole(user: User) {
-    const newRole = user.role === 'admin' ? 'user' : 'admin'
-    setSaving(user.id)
+  async function changeRole(userId: string, newRole: string) {
+    setSaving(userId)
     await fetch('/api/users', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: user.id, role: newRole }),
+      body: JSON.stringify({ id: userId, role: newRole }),
     })
-    setUsers(prev => prev.map(u => u.id === user.id ? { ...u, role: newRole } : u))
+    setUsers(prev => prev.map(u => u.id === userId ? { ...u, role: newRole } : u))
     setSaving(null)
   }
 
@@ -129,9 +128,11 @@ export default function AdminUsersPage() {
                     <td className="px-6 py-4 text-sm text-muted">{user.email}</td>
                     <td className="px-6 py-4">
                       <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                        user.role === 'admin' ? 'bg-accent/10 text-accent' : 'bg-gray-light text-gray-badge'
+                        user.role === 'admin' ? 'bg-accent/10 text-accent' :
+                        user.role === 'tecnico' ? 'bg-blue-light text-blue' :
+                        'bg-gray-light text-gray-badge'
                       }`}>
-                        {user.role === 'admin' ? 'Administrador' : 'Usuario'}
+                        {user.role === 'admin' ? 'Administrador' : user.role === 'tecnico' ? 'Técnico' : 'Usuario'}
                       </span>
                     </td>
                     <td className="px-6 py-4 text-sm text-light">
@@ -141,16 +142,21 @@ export default function AdminUsersPage() {
                       {user.id !== session?.user?.id && (
                         <div className="flex items-center gap-2 flex-wrap">
                           <button
-                            onClick={() => toggleRole(user)}
+                            onClick={() => changeRole(user.id, user.role === 'admin' ? 'user' : user.role === 'tecnico' ? 'user' : 'tecnico')}
                             disabled={saving === user.id}
-                            className={`inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-all duration-200 ${
-                              user.role === 'admin'
-                                ? 'border border-border text-muted hover:bg-surface-hover hover:text-foreground'
-                                : 'bg-accent/10 text-accent hover:bg-accent/20'
-                            } disabled:opacity-50`}
+                            className="inline-flex items-center gap-1.5 rounded-md border border-border px-3 py-1.5 text-xs font-medium text-muted hover:bg-surface-hover hover:text-foreground disabled:opacity-50 transition-all duration-200"
                           >
-                            {user.role === 'admin' ? 'Quitar admin' : 'Hacer admin'}
+                            {user.role === 'admin' ? 'Quitar admin' : user.role === 'tecnico' ? 'Quitar técnico' : 'Hacer técnico'}
                           </button>
+                          {user.role !== 'admin' && (
+                            <button
+                              onClick={() => changeRole(user.id, 'admin')}
+                              disabled={saving === user.id}
+                              className="inline-flex items-center gap-1.5 rounded-md bg-accent/10 px-3 py-1.5 text-xs font-medium text-accent hover:bg-accent/20 disabled:opacity-50 transition-all duration-200"
+                            >
+                              Hacer admin
+                            </button>
+                          )}
 
                           <button
                             onClick={() => { setResetPasswordUser(user); setNewPassword(''); setResetMessage('') }}

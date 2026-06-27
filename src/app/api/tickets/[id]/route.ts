@@ -27,15 +27,13 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
 
 export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await getServerSession(authOptions)
-  if (!session) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
+  if (!session || session.user.role !== 'admin') {
+    return NextResponse.json({ error: 'Solo administradores pueden eliminar tickets' }, { status: 403 })
+  }
 
   const { id } = await params
   const ticket = await findTicketById(id)
   if (!ticket) return NextResponse.json({ error: 'No encontrado' }, { status: 404 })
-
-  if (session.user.role !== 'admin' && ticket.creatorId !== session.user.id) {
-    return NextResponse.json({ error: 'Sin permisos' }, { status: 403 })
-  }
 
   await deleteTicket(id)
   return NextResponse.json({ message: 'Eliminado' })

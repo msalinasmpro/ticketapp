@@ -32,11 +32,14 @@ export default async function DashboardPage({
 
   const params = await searchParams
   const q = params.q || ''
-  const isAdmin = session.user.role === 'admin'
+  const role = session.user.role
+  const isAdmin = role === 'admin'
+  const isTecnico = role === 'tecnico'
+  const canSeeAll = isAdmin || isTecnico
   const userId = session.user.id
 
   const whereParts: string[] = []
-  if (!isAdmin) whereParts.push(`creatorId=eq.${userId}`)
+  if (!canSeeAll) whereParts.push(`creatorId=eq.${userId}`)
 
   const countWhere = whereParts.length > 0 ? whereParts.join('&') : undefined
 
@@ -54,18 +57,18 @@ export default async function DashboardPage({
   if (q) {
     const eq = encodeURIComponent(q)
     const fetchHeaders = { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' }
-    const searchWhere = !isAdmin ? `&creatorId=eq.${userId}` : ''
+    const searchWhere = !canSeeAll ? `&creatorId=eq.${userId}` : ''
     const url = `${SUPABASE_URL}/rest/v1/Ticket?select=${select}&or=(title.ilike.*${eq}*,company.ilike.*${eq}*,phone.ilike.*${eq}*,description.ilike.*${eq}*)${searchWhere}&order=createdAt.desc&limit=10`
     recentTickets = await fetch(url, { headers: fetchHeaders }).then(r => r.json())
   } else {
-    const ticketWhere = !isAdmin ? `creatorId=eq.${userId}` : undefined
+    const ticketWhere = !canSeeAll ? `creatorId=eq.${userId}` : undefined
     recentTickets = await findTickets({ select, where: ticketWhere, order: 'createdAt.desc', limit: 10 }) as unknown as DashboardTicket[]
   }
 
   const [dailyData, weeklyData, monthlyData] = await Promise.all([
-    getTicketStatsByPeriod('day', 7, isAdmin, isAdmin ? undefined : userId),
-    getTicketStatsByPeriod('week', 4, isAdmin, isAdmin ? undefined : userId),
-    getTicketStatsByPeriod('month', 6, isAdmin, isAdmin ? undefined : userId),
+    getTicketStatsByPeriod('day', 7, canSeeAll, canSeeAll ? undefined : userId),
+    getTicketStatsByPeriod('week', 4, canSeeAll, canSeeAll ? undefined : userId),
+    getTicketStatsByPeriod('month', 6, canSeeAll, canSeeAll ? undefined : userId),
   ])
 
   const stats = [
