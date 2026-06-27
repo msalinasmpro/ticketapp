@@ -19,10 +19,11 @@ interface TicketFormProps {
   }
   onSubmit: (data: Record<string, string | undefined>) => Promise<void>
   showClientName?: boolean
+  showSolution?: boolean
   assignees?: { id: string; name: string; email: string }[]
 }
 
-export function TicketForm({ initialData, onSubmit, showClientName, assignees = [] }: TicketFormProps) {
+export function TicketForm({ initialData, onSubmit, showClientName, showSolution, assignees = [] }: TicketFormProps) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -258,7 +259,7 @@ export function TicketForm({ initialData, onSubmit, showClientName, assignees = 
         )}
       </div>
 
-      {showClientName && initialData && (
+      {showSolution && initialData && (
         <div>
           <label htmlFor="solution" className="block text-sm font-medium text-foreground mb-1.5">
             Solución del problema

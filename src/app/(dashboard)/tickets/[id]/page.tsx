@@ -50,6 +50,7 @@ export default function TicketDetailPage({ params }: { params: Promise<{ id: str
   const [loading, setLoading] = useState(true)
   const [editing, setEditing] = useState(false)
   const isAdmin = session?.user?.role === 'admin'
+  const isTecnico = session?.user?.role === 'tecnico'
 
   useEffect(() => {
     fetch(`/api/tickets/${id}`)
@@ -139,6 +140,7 @@ export default function TicketDetailPage({ params }: { params: Promise<{ id: str
             initialData={ticket}
             onSubmit={handleUpdate}
             showClientName={isAdmin}
+            showSolution={isAdmin || isTecnico}
             assignees={admins}
           />
         </div>

@@ -46,11 +46,11 @@ export async function POST(req: Request) {
     const ticket = await createTicket(ticketData)
 
     const users = await findUsers()
-    const admins = users.filter(u => u.role === 'admin')
+    const notifyUsers = users.filter(u => u.role === 'admin' || u.role === 'tecnico')
 
-    for (const admin of admins) {
+    for (const user of notifyUsers) {
       await createNotification({
-        userId: admin.id,
+        userId: user.id,
         type: 'NEW_TICKET',
         title: 'Nuevo ticket creado',
         message: `${session.user.name || 'Usuario'} ha creado el ticket "${ticket.title}"`,
