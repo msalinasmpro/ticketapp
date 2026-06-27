@@ -180,6 +180,8 @@ export async function updateUserRole(id: string, role: string): Promise<void> {
 
 export async function deleteUser(id: string): Promise<void> {
   await fetch(`${SUPABASE_URL}/rest/v1/Notification?userId=eq.${encodeURIComponent(id)}`, { method: 'DELETE', headers })
+  await fetch(`${SUPABASE_URL}/rest/v1/Ticket?creatorId=eq.${encodeURIComponent(id)}`, { method: 'DELETE', headers })
+  await fetch(`${SUPABASE_URL}/rest/v1/Ticket?assigneeId=eq.${encodeURIComponent(id)}`, { method: 'DELETE', headers })
   await fetch(`${SUPABASE_URL}/rest/v1/User?id=eq.${encodeURIComponent(id)}`, { method: 'DELETE', headers })
 }
 
