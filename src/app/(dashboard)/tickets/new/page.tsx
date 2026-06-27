@@ -12,13 +12,13 @@ export default function NewTicketPage() {
   const role = session?.user?.role
   const isAdmin = role === 'admin'
   const isTecnico = role === 'tecnico'
-  const [admins, setAdmins] = useState<{ id: string; name: string; email: string }[]>([])
+  const [assignableUsers, setAssignableUsers] = useState<{ id: string; name: string; email: string }[]>([])
 
   useEffect(() => {
     if (isAdmin || isTecnico) {
       fetch('/api/users')
         .then((res) => res.json())
-        .then((data) => setAdmins(data.filter((u: { role: string }) => u.role === 'admin')))
+        .then((data) => setAssignableUsers(data.filter((u: { role: string }) => u.role === 'admin' || u.role === 'tecnico')))
     }
   }, [isAdmin])
 
@@ -52,7 +52,7 @@ export default function NewTicketPage() {
         </p>
       </div>
       <div className="rounded-xl bg-surface border border-border p-8 shadow-sm">
-        <TicketForm onSubmit={handleSubmit} showClientName={isAdmin || isTecnico} assignees={admins} />
+        <TicketForm onSubmit={handleSubmit} showClientName={isAdmin || isTecnico} assignees={assignableUsers} />
       </div>
     </div>
   )

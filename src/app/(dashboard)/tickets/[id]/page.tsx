@@ -46,7 +46,7 @@ export default function TicketDetailPage({ params }: { params: Promise<{ id: str
   const router = useRouter()
   const { data: session } = useSession()
   const [ticket, setTicket] = useState<Ticket | null>(null)
-  const [admins, setAdmins] = useState<{ id: string; name: string; email: string }[]>([])
+  const [assignableUsers, setAssignableUsers] = useState<{ id: string; name: string; email: string }[]>([])
   const [loading, setLoading] = useState(true)
   const [editing, setEditing] = useState(false)
   const isAdmin = session?.user?.role === 'admin'
@@ -62,7 +62,7 @@ export default function TicketDetailPage({ params }: { params: Promise<{ id: str
     if (isAdmin) {
       fetch('/api/users')
         .then((res) => res.json())
-        .then((data) => setAdmins(data.filter((u: { role: string }) => u.role === 'admin')))
+        .then((data) => setAssignableUsers(data.filter((u: { role: string }) => u.role === 'admin' || u.role === 'tecnico')))
     }
   }, [id, isAdmin])
 
@@ -141,7 +141,7 @@ export default function TicketDetailPage({ params }: { params: Promise<{ id: str
             onSubmit={handleUpdate}
             showClientName={isAdmin}
             showSolution={isAdmin || isTecnico}
-            assignees={admins}
+            assignees={assignableUsers}
           />
         </div>
       </div>
