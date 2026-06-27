@@ -34,10 +34,10 @@ const priorityLabels: Record<string, string> = {
   LOW: 'Baja', MEDIUM: 'Media', HIGH: 'Alta', CRITICAL: 'Crítica',
 }
 const statusDotColors: Record<string, string> = {
-  OPEN: 'bg-blue', IN_PROGRESS: 'bg-yellow', RESOLVED: 'bg-green', CLOSED: 'bg-gray-badge',
+  OPEN: 'bg-[#3b82f6] shadow-[0_0_6px_rgba(59,130,246,0.5)]', IN_PROGRESS: 'bg-[#f59e0b] shadow-[0_0_6px_rgba(245,158,11,0.5)]', RESOLVED: 'bg-[#3ecf8e] shadow-[0_0_6px_rgba(62,207,142,0.5)]', CLOSED: 'bg-[#6b7280] shadow-[0_0_6px_rgba(107,114,128,0.3)]',
 }
 const priorityDotColors: Record<string, string> = {
-  LOW: 'bg-gray-badge', MEDIUM: 'bg-blue', HIGH: 'bg-orange', CRITICAL: 'bg-red',
+  LOW: 'bg-[#6b7280] shadow-[0_0_6px_rgba(107,114,128,0.3)]', MEDIUM: 'bg-[#3b82f6] shadow-[0_0_6px_rgba(59,130,246,0.5)]', HIGH: 'bg-[#f97316] shadow-[0_0_6px_rgba(249,115,22,0.5)]', CRITICAL: 'bg-[#ef4444] shadow-[0_0_6px_rgba(239,68,68,0.5)]',
 }
 
 function SortIcon({ active, dir }: { active: boolean; dir: SortDir }) {
@@ -149,13 +149,13 @@ export function TicketTable({ tickets, isAdmin, canSeeAll = isAdmin }: TicketTab
                 )}
                 <td className="px-6 py-2">
                   <span className="inline-flex items-center gap-1.5 text-[11px] font-medium text-muted">
-                    <span className={`h-1 w-1 rounded-full ${statusDotColors[ticket.status]}`} />
-                    {statusLabels[ticket.status] || ticket.status}
+                    <span className={`h-2.5 w-2.5 rounded-full ${statusDotColors[ticket.status]}`} />
+                        {statusLabels[ticket.status] || ticket.status}
                   </span>
                 </td>
                 <td className="px-6 py-2">
                   <span className="inline-flex items-center gap-1.5 text-[11px] font-medium text-muted">
-                    <span className={`h-1 w-1 rounded-full ${priorityDotColors[ticket.priority]}`} />
+                    <span className={`h-2.5 w-2.5 rounded-full ${priorityDotColors[ticket.priority]}`} />
                     {priorityLabels[ticket.priority] || ticket.priority}
                   </span>
                 </td>
