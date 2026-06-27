@@ -126,7 +126,7 @@ export default function TicketDetailPage({ params }: { params: Promise<{ id: str
 
   if (editing) {
     return (
-      <div className="max-w-2xl">
+      <div className="max-w-2xl mx-auto">
         <div className="mb-8">
           <h1 className="text-3xl font-semibold tracking-tight text-foreground">
             Editar Ticket
@@ -149,7 +149,7 @@ export default function TicketDetailPage({ params }: { params: Promise<{ id: str
   }
 
   return (
-    <div className="max-w-3xl">
+      <div className="max-w-3xl mx-auto">
       <div className="flex items-center justify-between mb-8">
         <div>
           <Link href="/tickets" className="inline-flex items-center gap-1.5 text-sm text-light hover:text-foreground transition-colors mb-3">
