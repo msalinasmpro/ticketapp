@@ -9,11 +9,13 @@ import { TicketForm } from '@/components/tickets/ticket-form'
 export default function NewTicketPage() {
   const router = useRouter()
   const { data: session } = useSession()
-  const isAdmin = session?.user?.role === 'admin'
+  const role = session?.user?.role
+  const isAdmin = role === 'admin'
+  const isTecnico = role === 'tecnico'
   const [admins, setAdmins] = useState<{ id: string; name: string; email: string }[]>([])
 
   useEffect(() => {
-    if (isAdmin) {
+    if (isAdmin || isTecnico) {
       fetch('/api/users')
         .then((res) => res.json())
         .then((data) => setAdmins(data.filter((u: { role: string }) => u.role === 'admin')))
@@ -50,7 +52,7 @@ export default function NewTicketPage() {
         </p>
       </div>
       <div className="rounded-xl bg-surface border border-border p-8 shadow-sm">
-        <TicketForm onSubmit={handleSubmit} showClientName={isAdmin} assignees={admins} />
+        <TicketForm onSubmit={handleSubmit} showClientName={isAdmin || isTecnico} assignees={admins} />
       </div>
     </div>
   )
