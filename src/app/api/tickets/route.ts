@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
-import { findTickets, createTicket, createNotification, findEmailConfig, findUsers, findUserById } from '@/lib/db'
+import { findTickets, createTicket, createNotification, findEmailConfig, findUsers, findUserById, type DbTicket } from '@/lib/db'
 import { ticketSchema } from '@/lib/validations'
 import { sendEmail, buildTicketEmail } from '@/lib/email'
 
@@ -45,42 +45,52 @@ export async function POST(req: Request) {
     }
     const ticket = await createTicket(ticketData)
 
-    const creator = await findUserById(session.user.id)
-
-    const users = await findUsers()
-    const notifyUsers = users.filter(u => u.role === 'admin' || u.role === 'tecnico')
-
-    for (const user of notifyUsers) {
-      await createNotification({
-        userId: user.id,
-        type: 'NEW_TICKET',
-        title: 'Nuevo ticket creado',
-        message: `${session.user.name || 'Usuario'} ha creado el ticket "${ticket.title}"`,
-        ticketId: ticket.id,
-      })
-
-      const emailConfig = await findEmailConfig()
-
-      if (emailConfig && emailConfig.enabled) {
-        await sendEmail({
-          to: emailConfig.from as string,
-          subject: `[TicketApp] Nuevo ticket: ${ticket.title}`,
-          html: buildTicketEmail({
-            title: ticket.title,
-            description: ticket.description,
-            priority: ticket.priority,
-            company: ticket.company,
-            phone: ticket.phone,
-            clientName: ticket.clientName || session.user.name,
-            creatorName: creator?.name || session.user.name || 'Desconocido',
-            creatorEmail: creator?.email || session.user.email || '',
-          }),
-        })
-      }
-    }
+    sendNotificationsAndEmail(ticket, session.user).catch(() => {})
 
     return NextResponse.json(ticket, { status: 201 })
   } catch {
     return NextResponse.json({ error: 'Datos inválidos' }, { status: 400 })
   }
+}
+
+async function sendNotificationsAndEmail(ticket: DbTicket, user: { name?: string | null; email?: string | null; id: string; role: string }) {
+  try {
+    const users = await findUsers()
+    const notifyUsers = users.filter(u => u.role === 'admin' || u.role === 'tecnico')
+
+    for (const u of notifyUsers) {
+      try {
+        await createNotification({
+          userId: u.id,
+          type: 'NEW_TICKET',
+          title: 'Nuevo ticket creado',
+          message: `${user.name || 'Usuario'} ha creado el ticket "${ticket.title}"`,
+          ticketId: ticket.id,
+        })
+      } catch {}
+    }
+
+    const emailConfig = await findEmailConfig()
+    if (emailConfig && emailConfig.enabled) {
+      const creator = await findUserById(user.id)
+      for (const u of notifyUsers) {
+        try {
+          await sendEmail({
+            to: emailConfig.from as string,
+            subject: `[TicketApp] Nuevo ticket: ${ticket.title}`,
+            html: buildTicketEmail({
+              title: ticket.title as string,
+              description: ticket.description as string,
+              priority: ticket.priority as string,
+              company: ticket.company as string,
+              phone: ticket.phone as string,
+              clientName: (ticket.clientName as string) || user.name,
+              creatorName: creator?.name || user.name || 'Desconocido',
+              creatorEmail: creator?.email || user.email || '',
+            }),
+          })
+        } catch {}
+      }
+    }
+  } catch {}
 }
