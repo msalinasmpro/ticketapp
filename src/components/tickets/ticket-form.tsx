@@ -20,10 +20,11 @@ interface TicketFormProps {
   onSubmit: (data: Record<string, string | undefined>) => Promise<void>
   showClientName?: boolean
   showSolution?: boolean
+  clientMode?: boolean
   assignees?: { id: string; name: string; email: string }[]
 }
 
-export function TicketForm({ initialData, onSubmit, showClientName, showSolution, assignees = [] }: TicketFormProps) {
+export function TicketForm({ initialData, onSubmit, showClientName, showSolution, clientMode, assignees = [] }: TicketFormProps) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -86,40 +87,44 @@ export function TicketForm({ initialData, onSubmit, showClientName, showSolution
         </div>
       )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        <div className="sm:col-span-2">
-          <label htmlFor="title" className="block text-sm font-medium text-foreground mb-1.5">
-            Título del ticket *
-          </label>
-          <input
-            id="title"
-            name="title"
-            type="text"
-            required
-            defaultValue={initialData?.title}
-            placeholder="Ej: Computador no enciende"
-            className="block w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-light focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-all duration-200"
-          />
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      {clientMode && initialData && (
         <div>
-          <label htmlFor="company" className="block text-sm font-medium text-foreground mb-1.5">
-            Empresa *
+          <label htmlFor="description" className="block text-sm font-medium text-foreground mb-1.5">
+            Problema *
           </label>
-          <input
-            id="company"
-            name="company"
-            type="text"
+          <textarea
+            id="description"
+            name="description"
+            rows={6}
             required
-            defaultValue={initialData?.company || ''}
-            placeholder="Nombre de la empresa"
-            className="block w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-light focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-all duration-200"
+            defaultValue={(initialData as Record<string, unknown>).description as string || ''}
+            placeholder="Describe el problema con el mayor detalle posible..."
+            className="block w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-light focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-all duration-200 resize-none"
           />
         </div>
+      )}
 
-        {showClientName ? (
+      {(!clientMode || !initialData) && (
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div className="sm:col-span-2">
+              <label htmlFor="title" className="block text-sm font-medium text-foreground mb-1.5">
+                Título del ticket *
+              </label>
+              <input
+                id="title"
+                name="title"
+                type="text"
+                required
+                defaultValue={(initialData as Record<string, unknown>)?.title as string}
+                placeholder="Ej: Computador no enciende"
+                className="block w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-light focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-all duration-200"
+              />
+            </div>
+          </div>
+
+      {clientMode && !initialData ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div>
             <label htmlFor="clientName" className="block text-sm font-medium text-foreground mb-1.5">
               Nombre del cliente *
@@ -129,29 +134,78 @@ export function TicketForm({ initialData, onSubmit, showClientName, showSolution
               name="clientName"
               type="text"
               required
-              defaultValue={initialData?.clientName || ''}
-              placeholder="Nombre completo del cliente"
+              placeholder="Nombre completo"
               className="block w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-light focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-all duration-200"
             />
           </div>
-        ) : (
           <div>
             <label htmlFor="phone" className="block text-sm font-medium text-foreground mb-1.5">
-              Teléfono de contacto
+              Teléfono *
             </label>
             <input
               id="phone"
               name="phone"
               type="tel"
               inputMode="tel"
-              pattern="^\+?[\d\s-]*$"
-              defaultValue={initialData?.phone || ''}
+              required
               placeholder="+56 9 1234 5678"
               className="block w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-light focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-all duration-200"
             />
           </div>
-        )}
-      </div>
+        </div>
+      ) : null}
+
+      {!clientMode && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div>
+            <label htmlFor="company" className="block text-sm font-medium text-foreground mb-1.5">
+              Empresa {clientMode ? '' : '*'}
+            </label>
+            <input
+              id="company"
+              name="company"
+              type="text"
+              required={!clientMode}
+              defaultValue={initialData?.company || ''}
+              placeholder="Nombre de la empresa"
+              className="block w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-light focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-all duration-200"
+            />
+          </div>
+
+          {showClientName ? (
+            <div>
+              <label htmlFor="clientName" className="block text-sm font-medium text-foreground mb-1.5">
+                Nombre del cliente *
+              </label>
+              <input
+                id="clientName"
+                name="clientName"
+                type="text"
+                required
+                defaultValue={initialData?.clientName || ''}
+                placeholder="Nombre completo del cliente"
+                className="block w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-light focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-all duration-200"
+              />
+            </div>
+          ) : (
+            <div>
+              <label htmlFor="phone" className="block text-sm font-medium text-foreground mb-1.5">
+                Teléfono de contacto
+              </label>
+              <input
+                id="phone"
+                name="phone"
+                type="tel"
+                inputMode="tel"
+                pattern="^\+?[\d\s-]*$"
+                defaultValue={initialData?.phone || ''}
+                placeholder="+56 9 1234 5678"
+                className="block w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-light focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-all duration-200"
+              />
+            </div>
+          )}
+        </div>
+      )}
 
       {showClientName && (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -322,7 +376,10 @@ export function TicketForm({ initialData, onSubmit, showClientName, showSolution
           className="hidden"
         />
       </div>
+        </>
+      )}
 
+      {(clientMode && initialData) ? null : (
       <div className="flex items-center justify-end gap-3 pt-4 border-t border-border">
         <button
           type="button"
@@ -347,6 +404,7 @@ export function TicketForm({ initialData, onSubmit, showClientName, showSolution
           ) : initialData ? 'Guardar Ticket' : 'Crear Ticket'}
         </button>
       </div>
+      )}
     </form>
   )
 }

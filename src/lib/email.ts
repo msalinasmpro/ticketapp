@@ -50,6 +50,7 @@ export function buildTicketEmail(ticket: {
   priority: string
   company?: string | null
   phone?: string | null
+  clientName?: string | null
   creatorName: string
   creatorEmail: string
 }): string {
@@ -118,13 +119,19 @@ export function buildTicketEmail(ticket: {
           </div>
           <div style="display: flex; gap: 24px;">
             <div class="field" style="margin-bottom: 0;">
-              <div class="field-label">Creado por</div>
-              <div class="field-value">${ticket.creatorName}</div>
+              <div class="field-label">Nombre del cliente</div>
+              <div class="field-value" style="font-weight: 500;">${ticket.clientName || ticket.creatorName}</div>
             </div>
             <div class="field" style="margin-bottom: 0;">
               <div class="field-label">Email</div>
               <div class="field-value">${ticket.creatorEmail}</div>
             </div>
+            ${ticket.company ? `
+            <div class="field" style="margin-bottom: 0;">
+              <div class="field-label">Empresa</div>
+              <div class="field-value">${ticket.company}</div>
+            </div>
+            ` : ''}
             ${ticket.phone ? `
             <div class="field" style="margin-bottom: 0;">
               <div class="field-label">Teléfono</div>

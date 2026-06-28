@@ -139,8 +139,9 @@ export default function TicketDetailPage({ params }: { params: Promise<{ id: str
           <TicketForm
             initialData={ticket}
             onSubmit={handleUpdate}
-            showClientName={isAdmin}
+            showClientName={isAdmin || isTecnico}
             showSolution={isAdmin || isTecnico}
+            clientMode={!isAdmin && !isTecnico}
             assignees={assignableUsers}
           />
         </div>

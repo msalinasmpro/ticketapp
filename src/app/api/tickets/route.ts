@@ -69,6 +69,7 @@ export async function POST(req: Request) {
             priority: ticket.priority,
             company: ticket.company,
             phone: ticket.phone,
+            clientName: ticket.clientName,
             creatorName: ticket.creator?.name || 'Desconocido',
             creatorEmail: ticket.creator?.email || '',
           }),

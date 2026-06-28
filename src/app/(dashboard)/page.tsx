@@ -143,6 +143,19 @@ export default async function DashboardPage({
           </svg>
           Nuevo Ticket
         </Link>
+        {!canSeeAll && (
+          <a
+            href="https://www.teamviewer.com/es/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 rounded-[6px] bg-[#00a0e9] px-4 py-2 text-[13px] font-medium text-white hover:bg-[#0086c7] transition-colors duration-150 shrink-0"
+          >
+            <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M11.996 0C5.373 0 0 5.373 0 12s5.373 12 11.996 12C18.627 24 24 18.627 24 12S18.627 0 11.996 0zm5.442 16.86c-.17.29-.54.39-.83.22l-5.73-3.45c-.26-.16-.42-.45-.42-.76V7.35c0-.31.16-.6.42-.76l5.73-3.45c.29-.17.66-.07.83.22.17.29.12.67-.12.88L11.8 9.4l5.45 3.29c.24.14.3.52.13.81z"/>
+            </svg>
+            Descargar TeamViewer
+          </a>
+        )}
       </div>
 
       {isAdmin && (
