@@ -56,17 +56,17 @@ export default function ChangePasswordPage() {
   }
 
   return (
-    <div className="max-w-md mx-auto">
-      <div className="mb-8">
+    <div className="max-w-md mx-auto px-4 sm:px-0">
+      <div className="mb-6 sm:mb-8">
         <Link href="/" className="inline-flex items-center gap-1.5 text-sm text-light hover:text-foreground transition-colors mb-3">
           <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5M12 19l-7-7 7-7" /></svg>
           Volver
         </Link>
-        <h1 className="text-3xl font-semibold tracking-tight text-foreground">Cambiar Contraseña</h1>
+        <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-foreground">Cambiar Contraseña</h1>
         <p className="mt-1 text-sm text-light">Actualiza tu contraseña de acceso</p>
       </div>
 
-      <div className="rounded-xl bg-surface border border-border p-8">
+      <div className="rounded-xl bg-surface border border-border p-4 sm:p-8">
         {error && (
           <div className="mb-6 rounded-md bg-red-light border border-red/20 px-4 py-3 text-sm text-red">{error}</div>
         )}

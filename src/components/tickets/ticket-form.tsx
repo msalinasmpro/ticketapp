@@ -380,18 +380,18 @@ export function TicketForm({ initialData, onSubmit, showClientName, showSolution
       )}
 
       {(clientMode && initialData) ? null : (
-      <div className="flex items-center justify-end gap-3 pt-4 border-t border-border">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-4 border-t border-border">
         <button
           type="button"
           onClick={() => router.back()}
-          className="rounded-md border border-border bg-surface px-5 py-2.5 text-sm font-medium text-muted hover:bg-surface-hover transition-all duration-200"
+          className="rounded-md border border-border bg-surface px-5 py-2.5 text-sm font-medium text-muted hover:bg-surface-hover transition-all duration-200 order-2 sm:order-1"
         >
           Cancelar
         </button>
         <button
           type="submit"
           disabled={loading}
-          className="rounded-md bg-foreground px-5 py-2.5 text-sm font-medium text-background hover:bg-foreground/90 disabled:opacity-50 transition-all duration-200 shadow-sm"
+          className="rounded-md bg-foreground px-5 py-2.5 text-sm font-medium text-background hover:bg-foreground/90 disabled:opacity-50 transition-all duration-200 shadow-sm order-1 sm:order-2"
         >
           {loading ? (
             <span className="inline-flex items-center gap-2">

@@ -80,7 +80,7 @@ export default function RegisterPage() {
               <line x1="23" y1="11" x2="17" y2="11" />
             </svg>
           </div>
-          <h1 className="text-2xl font-semibold tracking-tight text-foreground">
+          <h1 className="text-xl sm:text-2xl font-semibold tracking-tight text-foreground">
             Crear cuenta
           </h1>
           <p className="mt-1.5 text-sm text-light">
@@ -88,7 +88,7 @@ export default function RegisterPage() {
           </p>
         </div>
 
-        <div className="rounded-xl bg-surface border border-border p-8 shadow-sm">
+        <div className="rounded-xl bg-surface border border-border p-6 sm:p-8 shadow-sm">
           {error && (
             <div className="mb-6 rounded-xl bg-red-light border border-red/20 p-4 text-sm text-red">
               {error}

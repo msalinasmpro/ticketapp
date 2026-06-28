@@ -86,7 +86,7 @@ export function TicketTable({ tickets, isAdmin, canSeeAll = isAdmin }: TicketTab
   function Header({ label, sortId, className = '' }: { label: string; sortId: SortKey; className?: string }) {
     return (
       <th
-        className={`px-6 py-2 text-left text-[11px] font-medium text-muted uppercase tracking-[0.08em] cursor-pointer hover:text-foreground select-none transition-colors duration-150 ${className}`}
+        className={`px-4 sm:px-6 py-2 text-left text-[11px] font-medium text-muted uppercase tracking-[0.08em] cursor-pointer hover:text-foreground select-none transition-colors duration-150 ${className}`}
         onClick={() => toggleSort(sortId)}
       >
         {label}<SortIcon active={sortKey === sortId} dir={sortDir} />
@@ -106,7 +106,7 @@ export function TicketTable({ tickets, isAdmin, canSeeAll = isAdmin }: TicketTab
             <Header label="Prioridad" sortId="priority" />
             {canSeeAll && <Header label="Reportar a" sortId="clientName" className="hidden lg:table-cell" />}
             {canSeeAll && <Header label="Asignado" sortId="assignee" className="hidden md:table-cell" />}
-            <th className="px-6 py-2 text-left text-[11px] font-medium text-muted uppercase tracking-[0.08em]">
+            <th className="px-4 sm:px-6 py-2 text-left text-[11px] font-medium text-muted uppercase tracking-[0.08em]">
               <span className="sr-only">Acciones</span>
             </th>
           </tr>
@@ -114,7 +114,7 @@ export function TicketTable({ tickets, isAdmin, canSeeAll = isAdmin }: TicketTab
         <tbody className="divide-y divide-border">
           {sorted.length === 0 ? (
             <tr>
-              <td colSpan={8} className="px-6 py-16 text-center">
+              <td colSpan={8} className="px-4 sm:px-6 py-16 text-center">
                 <div className="flex flex-col items-center">
                   <svg className="h-6 w-6 text-muted mb-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
@@ -126,7 +126,7 @@ export function TicketTable({ tickets, isAdmin, canSeeAll = isAdmin }: TicketTab
           ) : (
             sorted.map((ticket, idx) => (
               <tr key={ticket.id} className={`hover:bg-surface-hover transition-colors duration-[120ms] group ${idx % 2 === 1 ? 'bg-surface-hover/30' : ''}`}>
-                <td className="px-6 py-2">
+                <td className="px-4 sm:px-6 py-2">
                   <div>
                     <Link href={`/tickets/${ticket.id}`} className="text-[13px] font-medium text-foreground hover:text-link transition-colors duration-[120ms]">
                       <span className="text-muted mr-1.5">#{ticket.ticketNumber}</span>
@@ -139,33 +139,33 @@ export function TicketTable({ tickets, isAdmin, canSeeAll = isAdmin }: TicketTab
                     </div>
                   </div>
                 </td>
-                <td className="px-6 py-2 hidden sm:table-cell">
+                <td className="px-4 sm:px-6 py-2 hidden sm:table-cell">
                   <span className="text-[13px] text-muted">{ticket.company || '-'}</span>
                 </td>
                 {canSeeAll && (
-                  <td className="px-6 py-2 hidden md:table-cell">
+                  <td className="px-4 sm:px-6 py-2 hidden md:table-cell">
                     <span className="text-[13px] text-muted">{ticket.clientName || '-'}</span>
                   </td>
                 )}
-                <td className="px-6 py-2">
+                <td className="px-4 sm:px-6 py-2">
                   <span className="inline-flex items-center gap-1.5 text-[11px] font-medium text-muted">
                     <span className={`h-2.5 w-2.5 rounded-full ${statusDotColors[ticket.status]}`} />
                         {statusLabels[ticket.status] || ticket.status}
                   </span>
                 </td>
-                <td className="px-6 py-2">
+                <td className="px-4 sm:px-6 py-2">
                   <span className="inline-flex items-center gap-1.5 text-[11px] font-medium text-muted">
                     <span className={`h-2.5 w-2.5 rounded-full ${priorityDotColors[ticket.priority]}`} />
                     {priorityLabels[ticket.priority] || ticket.priority}
                   </span>
                 </td>
                 {canSeeAll && (
-                  <td className="px-6 py-2 hidden lg:table-cell">
+                  <td className="px-4 sm:px-6 py-2 hidden lg:table-cell">
                     <span className="text-[13px] text-muted">{ticket.reportTo || '-'}</span>
                   </td>
                 )}
                 {canSeeAll && (
-                  <td className="px-6 py-2 hidden md:table-cell">
+                  <td className="px-4 sm:px-6 py-2 hidden md:table-cell">
                     {ticket.assignee?.name ? (
                       <div className="flex items-center gap-2">
                         <span className="h-5 w-5 rounded-full bg-surface-hover text-muted flex items-center justify-center text-[10px] font-semibold shrink-0">
@@ -178,8 +178,8 @@ export function TicketTable({ tickets, isAdmin, canSeeAll = isAdmin }: TicketTab
                     )}
                   </td>
                 )}
-                <td className="px-6 py-2">
-                  <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-[120ms]">
+                <td className="px-4 sm:px-6 py-2">
+                  <div className="flex items-center gap-1 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-[120ms]">
                     <Link href={`/tickets/${ticket.id}`} className="rounded-[4px] p-1.5 text-muted hover:text-foreground hover:bg-surface-hover transition-all duration-[120ms]" title="Ver detalle">
                       <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
                     </Link>

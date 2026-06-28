@@ -111,51 +111,55 @@ export default async function DashboardPage({
 
   return (
     <div>
-      <div className="flex items-center gap-4 mb-8 rounded-[6px] bg-surface border border-border p-5">
-        <div className="h-12 w-12 rounded-full bg-[#3ecf8e]/10 text-[#3ecf8e] flex items-center justify-center text-lg font-semibold shrink-0">
-          {getInitials(session.user?.name || 'U')}
-        </div>
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2">
-            <h1 className="text-[18px] font-semibold text-foreground tracking-tight">
-              Hola, {session.user?.name}
-            </h1>
-            {isAdmin && (
-              <span className="inline-flex items-center rounded-full bg-[#3ecf8e]/10 px-2 py-0.5 text-[11px] font-medium text-[#3ecf8e]">
-                Admin
-              </span>
-            )}
+      <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 mb-8 rounded-[6px] bg-surface border border-border p-4 sm:p-5">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-[#3ecf8e]/10 text-[#3ecf8e] flex items-center justify-center text-lg font-semibold shrink-0">
+            {getInitials(session.user?.name || 'U')}
           </div>
-          <p className="text-[13px] text-muted mt-0.5">
-            {isAdmin
-              ? `Tienes ${total} ticket${total !== 1 ? 's' : ''} en el sistema. ${open > 0 ? `${open} abiert${open !== 1 ? 'os' : 'o'}.` : 'Todo al día.'}`
-              : `Tienes ${total} ticket${total !== 1 ? 's' : ''}. ${open > 0 ? `${open} abiert${open !== 1 ? 'os' : 'o'}.` : 'Todo al día.'}`
-            }
-          </p>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2">
+              <h1 className="text-[16px] sm:text-[18px] font-semibold text-foreground tracking-tight truncate">
+                Hola, {session.user?.name}
+              </h1>
+              {isAdmin && (
+                <span className="inline-flex items-center rounded-full bg-[#3ecf8e]/10 px-2 py-0.5 text-[11px] font-medium text-[#3ecf8e] shrink-0">
+                  Admin
+                </span>
+              )}
+            </div>
+            <p className="text-[12px] sm:text-[13px] text-muted mt-0.5">
+              {isAdmin
+                ? `Tienes ${total} ticket${total !== 1 ? 's' : ''} en el sistema. ${open > 0 ? `${open} abiert${open !== 1 ? 'os' : 'o'}.` : 'Todo al día.'}`
+                : `Tienes ${total} ticket${total !== 1 ? 's' : ''}. ${open > 0 ? `${open} abiert${open !== 1 ? 'os' : 'o'}.` : 'Todo al día.'}`
+              }
+            </p>
+          </div>
         </div>
-        <Link
-          href="/tickets/new"
-          className="inline-flex items-center gap-2 rounded-[6px] bg-accent px-4 py-2 text-[13px] font-medium text-background hover:bg-accent-hover transition-colors duration-150 shrink-0"
-        >
-          <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="12" y1="5" x2="12" y2="19" />
-            <line x1="5" y1="12" x2="19" y2="12" />
-          </svg>
-          Nuevo Ticket
-        </Link>
-        {!canSeeAll && (
-          <a
-            href="https://www.teamviewer.com/es/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-[6px] bg-[#00a0e9] px-4 py-2 text-[13px] font-medium text-white hover:bg-[#0086c7] transition-colors duration-150 shrink-0"
+        <div className="flex flex-col sm:flex-row gap-2 shrink-0">
+          <Link
+            href="/tickets/new"
+            className="flex items-center justify-center gap-2 rounded-[6px] bg-accent px-4 py-2.5 text-[13px] font-medium text-background hover:bg-accent-hover transition-colors duration-150 h-10"
           >
-            <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M11.996 0C5.373 0 0 5.373 0 12s5.373 12 11.996 12C18.627 24 24 18.627 24 12S18.627 0 11.996 0zm5.442 16.86c-.17.29-.54.39-.83.22l-5.73-3.45c-.26-.16-.42-.45-.42-.76V7.35c0-.31.16-.6.42-.76l5.73-3.45c.29-.17.66-.07.83.22.17.29.12.67-.12.88L11.8 9.4l5.45 3.29c.24.14.3.52.13.81z"/>
+            <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19" />
+              <line x1="5" y1="12" x2="19" y2="12" />
             </svg>
-            Descargar TeamViewer
-          </a>
-        )}
+            Nuevo Ticket
+          </Link>
+          {!canSeeAll && (
+            <a
+              href="https://www.teamviewer.com/es/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 rounded-[6px] bg-[#00a0e9] px-4 py-2.5 text-[13px] font-medium text-white hover:bg-[#0086c7] transition-colors duration-150 h-10"
+            >
+              <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M11.996 0C5.373 0 0 5.373 0 12s5.373 12 11.996 12C18.627 24 24 18.627 24 12S18.627 0 11.996 0zm5.442 16.86c-.17.29-.54.39-.83.22l-5.73-3.45c-.26-.16-.42-.45-.42-.76V7.35c0-.31.16-.6.42-.76l5.73-3.45c.29-.17.66-.07.83.22.17.29.12.67-.12.88L11.8 9.4l5.45 3.29c.24.14.3.52.13.81z"/>
+              </svg>
+              TeamViewer
+            </a>
+          )}
+        </div>
       </div>
 
       {isAdmin && (
@@ -240,13 +244,13 @@ export default async function DashboardPage({
       </div>
 
       <div className="mx-auto max-w-4xl rounded-[6px] bg-surface border border-border overflow-hidden">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-6 py-3 border-b border-border">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-4 sm:px-6 py-3 border-b border-border">
           <h2 className="text-[13px] font-semibold text-foreground uppercase tracking-[0.08em]">Tickets Recientes</h2>
           <TicketSearch defaultValue={q} />
         </div>
         <TicketTable tickets={recentTickets} isAdmin={isAdmin} />
         {recentTickets.length > 0 && (
-          <div className="px-6 py-3 border-t border-border flex items-center justify-between">
+          <div className="px-4 sm:px-6 py-3 border-t border-border flex items-center justify-between">
             <p className="text-[11px] text-muted">
               Mostrando {recentTickets.length} de {total} tickets
             </p>

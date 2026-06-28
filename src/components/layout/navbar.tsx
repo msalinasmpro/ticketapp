@@ -22,9 +22,9 @@ export function Navbar() {
 
   return (
     <nav className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-9 items-center justify-between">
-          <div className="flex items-center gap-8">
+          <div className="flex items-center gap-4 sm:gap-8">
             <Link href="/" className="flex items-center gap-2">
               <div className="h-6 w-6 rounded-[4px] bg-accent flex items-center justify-center">
                 <svg className="h-3 w-3 text-black" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">

@@ -81,13 +81,13 @@ export default function AdminUsersPage() {
   if (!isAdmin) return null
 
   return (
-    <div className="mx-auto max-w-4xl">
-      <div className="mb-8">
+      <div className="mx-auto max-w-4xl px-4 sm:px-0">
+      <div className="mb-6 sm:mb-8">
         <Link href="/" className="inline-flex items-center gap-1.5 text-sm text-light hover:text-foreground transition-colors mb-3">
           <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 19l-7-7 7-7" /></svg>
           Volver al Dashboard
         </Link>
-        <h1 className="text-3xl font-semibold tracking-tight text-foreground">Gestionar Usuarios</h1>
+        <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-foreground">Gestionar Usuarios</h1>
         <p className="mt-1 text-sm text-light">Administra los roles de los usuarios registrados</p>
       </div>
 
@@ -107,26 +107,29 @@ export default function AdminUsersPage() {
             <table className="min-w-full">
               <thead>
                 <tr className="border-b border-border">
-                  <th className="px-6 py-3.5 text-left text-xs font-medium text-light uppercase tracking-wider">Nombre</th>
-                  <th className="px-6 py-3.5 text-left text-xs font-medium text-light uppercase tracking-wider">Email</th>
-                  <th className="px-6 py-3.5 text-left text-xs font-medium text-light uppercase tracking-wider">Rol</th>
-                  <th className="px-6 py-3.5 text-left text-xs font-medium text-light uppercase tracking-wider">Fecha</th>
-                  <th className="px-6 py-3.5 text-left text-xs font-medium text-light uppercase tracking-wider">Acciones</th>
+                  <th className="px-4 sm:px-6 py-3.5 text-left text-xs font-medium text-light uppercase tracking-wider">Nombre</th>
+                  <th className="px-4 sm:px-6 py-3.5 text-left text-xs font-medium text-light uppercase tracking-wider hidden sm:table-cell">Email</th>
+                  <th className="px-4 sm:px-6 py-3.5 text-left text-xs font-medium text-light uppercase tracking-wider">Rol</th>
+                  <th className="px-4 sm:px-6 py-3.5 text-left text-xs font-medium text-light uppercase tracking-wider hidden sm:table-cell">Fecha</th>
+                  <th className="px-4 sm:px-6 py-3.5 text-left text-xs font-medium text-light uppercase tracking-wider">Acciones</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
                 {users.map(user => (
                   <tr key={user.id} className="hover:bg-surface-hover transition-colors">
-                    <td className="px-6 py-4">
+                    <td className="px-4 sm:px-6 py-4">
                       <div className="flex items-center gap-3">
-                        <span className="h-8 w-8 rounded-full bg-accent/20 text-accent flex items-center justify-center text-xs font-semibold">
+                        <span className="h-8 w-8 rounded-full bg-accent/20 text-accent flex items-center justify-center text-xs font-semibold shrink-0">
                           {user.name?.charAt(0)?.toUpperCase() || '?'}
                         </span>
-                        <span className="text-sm font-medium text-foreground">{user.name}</span>
+                        <div className="min-w-0">
+                          <span className="text-sm font-medium text-foreground block truncate">{user.name}</span>
+                          <span className="text-xs text-muted sm:hidden block truncate">{user.email}</span>
+                        </div>
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-sm text-muted">{user.email}</td>
-                    <td className="px-6 py-4">
+                    <td className="px-4 sm:px-6 py-4 text-sm text-muted hidden sm:table-cell">{user.email}</td>
+                    <td className="px-4 sm:px-6 py-4">
                       <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
                         user.role === 'admin' ? 'bg-accent/10 text-accent' :
                         user.role === 'tecnico' ? 'bg-blue-light text-blue' :
@@ -135,10 +138,10 @@ export default function AdminUsersPage() {
                         {user.role === 'admin' ? 'Administrador' : user.role === 'tecnico' ? 'Técnico' : 'Usuario'}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-sm text-light">
+                    <td className="px-4 sm:px-6 py-4 text-sm text-light hidden sm:table-cell">
                       {new Date(user.createdAt).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' })}
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-4 sm:px-6 py-4">
                       {user.id !== session?.user?.id && (
                         <div className="flex items-center gap-2 flex-wrap">
                           <button
@@ -204,7 +207,7 @@ export default function AdminUsersPage() {
 
       {resetPasswordUser && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/60" onClick={() => setResetPasswordUser(null)}>
-          <div className="w-full max-w-md rounded-xl bg-surface border border-border p-6 shadow-xl" onClick={e => e.stopPropagation()}>
+          <div className="w-full max-w-md mx-4 rounded-xl bg-surface border border-border p-6 shadow-xl" onClick={e => e.stopPropagation()}>
             <h3 className="text-lg font-semibold text-foreground mb-1">Cambiar contraseña</h3>
             <p className="text-sm text-muted mb-4">Para: <span className="text-foreground font-medium">{resetPasswordUser.email}</span></p>
 

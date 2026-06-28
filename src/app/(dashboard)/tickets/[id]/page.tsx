@@ -126,16 +126,16 @@ export default function TicketDetailPage({ params }: { params: Promise<{ id: str
 
   if (editing) {
     return (
-      <div className="max-w-2xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-3xl font-semibold tracking-tight text-foreground">
+      <div className="max-w-2xl mx-auto px-4 sm:px-0">
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-foreground">
             Editar Ticket
           </h1>
           <p className="mt-1 text-sm text-light">
             Actualiza la información del ticket.
           </p>
         </div>
-        <div className="rounded-xl bg-surface border border-border p-8 shadow-sm">
+        <div className="rounded-xl bg-surface border border-border p-4 sm:p-8 shadow-sm">
           <TicketForm
             initialData={ticket}
             onSubmit={handleUpdate}
@@ -150,24 +150,24 @@ export default function TicketDetailPage({ params }: { params: Promise<{ id: str
   }
 
   return (
-      <div className="max-w-3xl mx-auto">
-      <div className="flex items-center justify-between mb-8">
-        <div>
+      <div className="max-w-3xl mx-auto px-4 sm:px-0">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
+        <div className="min-w-0">
           <Link href="/tickets" className="inline-flex items-center gap-1.5 text-sm text-light hover:text-foreground transition-colors mb-3">
             <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M19 12H5M12 19l-7-7 7-7" />
             </svg>
             Tickets
           </Link>
-          <h1 className="text-3xl font-semibold tracking-tight text-foreground">
-            <span className="text-muted text-2xl mr-2">#{ticket.ticketNumber}</span>
+          <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-foreground">
+            <span className="text-muted text-lg sm:text-2xl mr-2">#{ticket.ticketNumber}</span>
             {ticket.title}
           </h1>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           <button
             onClick={() => setEditing(true)}
-            className="inline-flex items-center gap-2 rounded-md border border-border bg-surface px-4 py-2.5 text-sm font-medium text-muted hover:bg-surface-hover transition-all duration-200"
+            className="inline-flex items-center gap-2 rounded-md border border-border bg-surface px-3 sm:px-4 py-2 sm:py-2.5 text-sm font-medium text-muted hover:bg-surface-hover transition-all duration-200"
           >
             <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
@@ -178,7 +178,7 @@ export default function TicketDetailPage({ params }: { params: Promise<{ id: str
           {isAdmin && (
             <button
               onClick={handleDelete}
-              className="inline-flex items-center gap-2 rounded-md bg-red-light border border-red/20 px-4 py-2.5 text-sm font-medium text-red hover:bg-red/10 transition-all duration-200"
+              className="inline-flex items-center gap-2 rounded-md bg-red-light border border-red/20 px-3 sm:px-4 py-2 sm:py-2.5 text-sm font-medium text-red hover:bg-red/10 transition-all duration-200"
             >
               <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="3 6 5 6 21 6" />
@@ -191,7 +191,7 @@ export default function TicketDetailPage({ params }: { params: Promise<{ id: str
       </div>
 
       <div className="rounded-xl bg-surface border border-border overflow-hidden">
-        <div className="p-8">
+        <div className="p-4 sm:p-8">
           <div className="flex items-center gap-3 mb-6">
             <span className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-medium ${
               ticket.status === 'OPEN' ? 'bg-blue-light text-blue' :
@@ -227,7 +227,7 @@ export default function TicketDetailPage({ params }: { params: Promise<{ id: str
           )}
         </div>
 
-        <div className="border-t border-border bg-surface-hover/50 px-8 py-5">
+        <div className="border-t border-border bg-surface-hover/50 px-4 sm:px-8 py-4 sm:py-5">
           <dl className="grid grid-cols-2 sm:grid-cols-3 gap-6">
             <div>
               <dt className="text-xs font-medium text-light uppercase tracking-wider mb-1">Empresa</dt>
