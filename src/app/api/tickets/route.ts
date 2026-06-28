@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
-import { findTickets, createTicket, createNotification, findEmailConfig, findUsers } from '@/lib/db'
+import { findTickets, createTicket, createNotification, findEmailConfig, findUsers, findUserById } from '@/lib/db'
 import { ticketSchema } from '@/lib/validations'
 import { sendEmail, buildTicketEmail } from '@/lib/email'
 
@@ -45,6 +45,8 @@ export async function POST(req: Request) {
     }
     const ticket = await createTicket(ticketData)
 
+    const creator = await findUserById(session.user.id)
+
     const users = await findUsers()
     const notifyUsers = users.filter(u => u.role === 'admin' || u.role === 'tecnico')
 
@@ -69,9 +71,9 @@ export async function POST(req: Request) {
             priority: ticket.priority,
             company: ticket.company,
             phone: ticket.phone,
-            clientName: ticket.clientName,
-            creatorName: ticket.creator?.name || 'Desconocido',
-            creatorEmail: ticket.creator?.email || '',
+            clientName: ticket.clientName || session.user.name,
+            creatorName: creator?.name || session.user.name || 'Desconocido',
+            creatorEmail: creator?.email || session.user.email || '',
           }),
         })
       }

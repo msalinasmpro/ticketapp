@@ -129,7 +129,7 @@ export async function deleteTicket(id: string): Promise<void> {
 export async function createTicket(data: Record<string, unknown>): Promise<DbTicket> {
   const now = new Date().toISOString()
 
-  const rows = await rest<DbTicket[]>(`/rest/v1/Ticket?select=id,title,description,status,priority,phone,company,attachmentUrl,creatorId,assigneeId,createdAt,updatedAt`, {
+  const rows = await rest<DbTicket[]>(`/rest/v1/Ticket?select=id,ticketNumber,title,description,status,priority,phone,company,clientName,reportTo,attachmentUrl,creatorId,assigneeId,createdAt,updatedAt`, {
     method: 'POST',
     headers: { ...headers, Prefer: 'return=representation' },
     body: JSON.stringify({ id: crypto.randomUUID(), ...data, createdAt: now, updatedAt: now }),
